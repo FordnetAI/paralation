@@ -1,0 +1,164 @@
+"""Paralation asset importer.
+
+Converts raw ComfyUI furniture generations (1024x1024, object on white
+background) into game-ready sprites: background keyed out, cropped,
+pixelized to the exact 32px-per-tile sprite size, palette quantized,
+anchored bottom-center, saved into Paralation/images/<name>.png.
+
+Usage:
+  python import_asset.py <file.png> <assetName>     one file, explicit name
+  python import_asset.py <folder>                   batch: names inferred from
+                                                    filename prefix, newest file
+                                                    per asset wins
+"""
+import sys
+import os
+import re
+from collections import deque
+from PIL import Image
+
+# logical (16px-scale) sprite sizes from sprites.js defs; output is 2x these
+SIZES = {
+    'bed': (32, 52), 'nightstand': (16, 22), 'bookshelf': (32, 40),
+    'desk': (48, 30), 'chair': (14, 18), 'backpack': (14, 15),
+    'rug': (64, 48), 'rug2': (80, 80), 'toilet': (16, 22),
+    'sinkP': (16, 24), 'tub': (32, 30), 'bedDouble': (48, 52),
+    'dresser': (32, 26), 'plant': (16, 24), 'hallTable': (32, 26),
+    'railing': (16, 48), 'couch': (48, 30), 'tvStand': (48, 34),
+    'coffeeT': (32, 20), 'counter': (16, 28), 'counterSink': (16, 28),
+    'counterNote': (16, 28), 'stove': (16, 28), 'fridge': (16, 34),
+    'tableD': (48, 34), 'mat': (32, 12), 'stairsD': (32, 64),
+    'stairsU': (32, 64), 'doorF': (32, 26), 'mirrorW': (12, 22),
+    'poster': (14, 18), 'windowW': (32, 24), 'photoW': (12, 14),
+}
+
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
+BG_THRESHOLD = 60  # color distance from corner-sampled background color
+PALETTE_COLORS = 32
+
+
+def key_background(im):
+    """Make background pixels transparent. Background color is sampled from
+    the four corners; removal flood-fills inward from the image border, so
+    interior regions that happen to match the background color (white pillows
+    on a white background, notes, mirror glass) are preserved as long as an
+    outline separates them from the edge."""
+    im = im.convert('RGBA')
+    w, h = im.size
+    px = im.load()
+    corners = [px[0, 0], px[w - 1, 0], px[0, h - 1], px[w - 1, h - 1]]
+    br = sum(c[0] for c in corners) // 4
+    bg = sum(c[1] for c in corners) // 4
+    bb = sum(c[2] for c in corners) // 4
+    lim = BG_THRESHOLD * 3
+
+    def is_bg(p):
+        return abs(p[0] - br) + abs(p[1] - bg) + abs(p[2] - bb) < lim
+
+    visited = bytearray(w * h)
+    q = deque()
+    for x in range(w):
+        for y in (0, h - 1):
+            if not visited[y * w + x] and is_bg(px[x, y]):
+                visited[y * w + x] = 1
+                q.append((x, y))
+    for y in range(h):
+        for x in (0, w - 1):
+            if not visited[y * w + x] and is_bg(px[x, y]):
+                visited[y * w + x] = 1
+                q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        r, g, b, _ = px[x, y]
+        px[x, y] = (r, g, b, 0)
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h and not visited[ny * w + nx] and is_bg(px[nx, ny]):
+                visited[ny * w + nx] = 1
+                q.append((nx, ny))
+    return im
+
+
+def pixelize(im, name):
+    lw, lh = SIZES[name]
+    tw, th = lw * 2, lh * 2
+    bbox = im.getbbox()
+    if bbox is None:
+        raise ValueError('image is empty after background removal')
+    im = im.crop(bbox)
+    cw, ch = im.size
+    f = min(tw / cw, th / ch)
+    nw, nh = max(1, round(cw * f)), max(1, round(ch * f))
+    im = im.resize((nw, nh), Image.BOX)  # area-average: clean pixelization
+    # crisp alpha, then palette quantize the color channels
+    alpha = im.getchannel('A').point(lambda a: 255 if a >= 128 else 0)
+    rgb = im.convert('RGB').quantize(colors=PALETTE_COLORS, method=Image.MEDIANCUT).convert('RGB')
+    out = Image.new('RGBA', (tw, th), (0, 0, 0, 0))
+    sprite = rgb.convert('RGBA')
+    sprite.putalpha(alpha)
+    # furniture sits on the floor: anchor bottom-center
+    out.paste(sprite, ((tw - nw) // 2, th - nh), sprite)
+    return out
+
+
+def import_one(path, name):
+    if name not in SIZES:
+        print('  SKIP %s: unknown asset name %r' % (os.path.basename(path), name))
+        return False
+    im = key_background(Image.open(path))
+    out = pixelize(im, name)
+    os.makedirs(OUT_DIR, exist_ok=True)
+    dest = os.path.join(OUT_DIR, name + '.png')
+    out.save(dest)
+    print('  OK %s -> %s (%dx%d)' % (os.path.basename(path), dest, out.width, out.height))
+    return True
+
+
+def infer_name(filename):
+    """ComfyUI names outputs like bed_00003_.png; take the part before the
+    first _NNNNN counter group."""
+    stem = os.path.splitext(os.path.basename(filename))[0]
+    m = re.match(r'(.+?)_\d{3,}_?$', stem)
+    return m.group(1) if m else stem
+
+
+def main():
+    args = sys.argv[1:]
+    if not args:
+        print(__doc__)
+        sys.exit(1)
+    target = args[0]
+    if os.path.isdir(target):
+        newest = {}
+        for fn in os.listdir(target):
+            if not fn.lower().endswith('.png'):
+                continue
+            name = infer_name(fn)
+            full = os.path.join(target, fn)
+            if name not in newest or os.path.getmtime(full) > os.path.getmtime(newest[name]):
+                newest[name] = full
+        if not newest:
+            print('no .png files found in ' + target)
+            sys.exit(1)
+        done, failed = 0, 0
+        for name, full in sorted(newest.items()):
+            try:
+                done += import_one(full, name)
+            except Exception as e:
+                failed += 1
+                print('  FAIL %s (%s): %s' % (os.path.basename(full), name, e))
+        print('imported %d asset(s) into %s%s' % (
+            done, os.path.abspath(OUT_DIR),
+            ', %d failed' % failed if failed else ''))
+        if failed:
+            sys.exit(1)
+    else:
+        name = args[1] if len(args) > 1 else infer_name(target)
+        try:
+            import_one(target, name)
+        except Exception as e:
+            print('  FAIL %s (%s): %s' % (os.path.basename(target), name, e))
+            sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()

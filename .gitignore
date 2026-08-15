@@ -1,0 +1,17 @@
+# Screenshot output from dev-server.js. Pure test artefacts, regenerated on
+# demand. Only the PNGs are ignored, so shots/ClaudeShots.md stays tracked and
+# the folder still exists in a fresh clone.
+shots/*.png
+
+# Raw ComfyUI generations live in E:\Comfy-Desktop\ComfyUI-Shared\output\paralation
+# and are deliberately NOT in this repo. Only the imported sprites in images/ are.
+
+node_modules/
+
+# python bytecode from running comfy/import_asset.py
+__pycache__/
+*.pyc
+
+Thumbs.db
+Desktop.ini
+.DS_Store
