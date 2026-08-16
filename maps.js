@@ -241,7 +241,12 @@ const MAPS = {
       drive(72, 20, 75, 31); drive(59, 28, 75, 31);
       drive(10, 56, 13, 65); drive(10, 62, 43, 65);
       drive(82, 56, 85, 65); drive(52, 62, 85, 65);
-      drive(18, 88, 21, 95); drive(18, 92, 43, 95);   // to the open garage bay
+      // to the open garage bay. These x values track where the dark opening
+      // actually sits in houseOpen.png (tiles 24.6-29.3 measured off the
+      // sprite). Re-measure if that art is ever regenerated: the bay moved
+      // from the left of the house to the right when the AI art replaced the
+      // code-drawn placeholder, and the portal silently stopped lining up.
+      drive(25, 88, 28, 95); drive(25, 92, 43, 95);
       drive(68, 88, 71, 95); drive(52, 92, 71, 95);
       drive(22, 108, 25, 115); drive(22, 112, 43, 115);
 
@@ -357,8 +362,8 @@ const MAPS = {
         portals: [
           // Matt's front door, back inside
           { x: 752, y: 256, w: 32, h: 16, to: 'lower', dx: 240, dy: 232, face: 'up' },
-          // the open garage bay on house 5
-          { x: 304, y: 1408, w: 32, h: 16, to: 'garage', dx: 240, dy: 208, face: 'up' },
+          // the open garage bay on house 5, centred on the opening in the art
+          { x: 416, y: 1408, w: 32, h: 16, to: 'garage', dx: 240, dy: 208, face: 'up' },
         ],
       };
     },
@@ -415,7 +420,7 @@ const MAPS = {
         'He has been "two weekends away" from finishing it since I was fourteen.' ] },
     ],
     portals: [
-      { x: 224, y: 240, w: 32, h: 16, to: 'outside', dx: 312, dy: 1432, face: 'down' },
+      { x: 224, y: 240, w: 32, h: 16, to: 'outside', dx: 440, dy: 1432, face: 'down' },
     ],
   },
 };
