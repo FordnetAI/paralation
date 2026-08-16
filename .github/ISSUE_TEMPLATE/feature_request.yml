@@ -1,0 +1,31 @@
+name: Feature request
+description: An idea for something the game should do.
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What's the idea?
+      placeholder: Interactable things should glow when you get close, so you can find them.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it make the game better?
+      placeholder: I kept mashing E at every wall trying to find things I had missed.
+  - type: dropdown
+    id: area
+    attributes:
+      label: What part of the game?
+      options:
+        - Art and visuals
+        - Controls and feel
+        - Story and dialogue
+        - The house
+        - The neighbourhood
+        - RPG systems (stats, XP, levelling)
+        - Something new entirely
+    validations:
+      required: true

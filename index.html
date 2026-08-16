@@ -6,12 +6,27 @@
 <meta name="description" content="Paralation - a top-down RPG about a kid who wakes up different.">
 <title>Paralation</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #08070d; display: grid; place-items: center; overflow: hidden; }
-  canvas { image-rendering: pixelated; width: min(100vw, 176.4vh); }
+  html, body { margin: 0; height: 100%; background: #08070d; overflow: hidden; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  canvas { image-rendering: pixelated; width: min(100vw, 170vh); }
+  /* feedback bar: kept out of the canvas so it never steals a keypress */
+  #feedback {
+    font: 11px/1 system-ui, sans-serif; color: #55506e;
+    padding: 8px 0 2px; display: flex; gap: 14px; align-items: center;
+  }
+  #feedback a { color: #7d76a0; text-decoration: none; border-bottom: 1px solid #2e2a40; }
+  #feedback a:hover { color: #b9aee8; border-bottom-color: #6a5fa0; }
 </style>
 </head>
 <body>
 <canvas id="game" width="960" height="544"></canvas>
+<div id="feedback">
+  <span>found a problem, or want something added?</span>
+  <a href="https://github.com/FordnetAI/paralation/issues/new?template=bug_report.yml"
+     target="_blank" rel="noopener">report a bug</a>
+  <a href="https://github.com/FordnetAI/paralation/issues/new?template=feature_request.yml"
+     target="_blank" rel="noopener">request a feature</a>
+</div>
 <script src="sprites.js"></script>
 <script src="maps.js"></script>
 <script src="stats.js"></script>

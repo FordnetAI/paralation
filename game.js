@@ -94,11 +94,31 @@
       if (o.hi) ctx.drawImage(o.hi, dx, dy, o.w, o.h);
       else ctx.drawImage(o.img, dx, dy);
     };
+    // Which inter rect (if any) an object's footprint sits on. Objects that
+    // match one get a proximity glow, so the player can find things to examine.
+    // Returns the rect's index because the glow keys off the `seen` set.
+    const inters = m.inter || [];
+    const hotFor = (tx, ty, fw, fh) => {
+      for (let i = 0; i < inters.length; i++) {
+        const it = inters[i];
+        if (tx < it.x + it.w && tx + fw > it.x && ty < it.y + it.h && ty + fh > it.y) {
+          return { cx: (tx + fw / 2) * T, cy: (ty + fh / 2) * T, idx: i };
+        }
+      }
+      return null;
+    };
+    // Baked-in art (wall art and floor flats) lives in the background image, so
+    // it cannot glow from the entity pass. Anything interactable gets recorded
+    // here and redrawn with a halo before the entity pass instead.
+    const hotArt = [];
     // wall art first, so floor-level flats (rugs, mats) always draw over it
     for (const [t, tx, ty] of (m.wallArt || [])) {
       const o = SPR.OBJ[t];
       if (!o) { console.warn('missing wall art type: ' + t); continue; }
-      drawObj(b, o, tx * T + ((o.fw * T - o.w) >> 1), ty * T + (o.dy || 0));
+      const dx = tx * T + ((o.fw * T - o.w) >> 1), dy = ty * T + (o.dy || 0);
+      drawObj(b, o, dx, dy);
+      const hot = hotFor(tx, ty, o.fw, o.fh);
+      if (hot) hotArt.push({ o: o, x: dx, y: dy, hot: hot });
     }
     const entities = [];
     for (const [t, tx, ty] of m.objects) {
@@ -106,8 +126,16 @@
       if (!o) { console.warn('missing object type: ' + t); continue; }
       const dx = tx * T + ((o.fw * T - o.w) >> 1);
       const dy = (ty + o.fh) * T - o.h;
-      if (o.flat) drawObj(b, o, dx, dy);
-      else entities.push({ o: o, img: o.img, x: dx, y: dy, base: (ty + o.fh) * T });
+      const hot = hotFor(tx, ty, o.fw, o.fh);
+      if (o.flat) {
+        drawObj(b, o, dx, dy);
+        if (hot) hotArt.push({ o: o, x: dx, y: dy, hot: hot });
+      } else {
+        entities.push({
+          o: o, img: o.img, x: dx, y: dy, base: (ty + o.fh) * T,
+          fw: o.fw, hot: hot,
+        });
+      }
       if (o.solid !== false && !o.flat) {
         for (let yy = ty; yy < ty + o.fh; yy++) {
           for (let xx = tx; xx < tx + o.fw; xx++) {
@@ -118,7 +146,7 @@
     }
     world[id] = {
       solid: solid, bg: bg, entities: entities, inter: m.inter, portals: m.portals,
-      mw: MW, mh: MH, pw: MW * T, ph: MH * T,
+      hotArt: hotArt, mw: MW, mh: MH, pw: MW * T, ph: MH * T,
     };
   }
   const FLOORS = ['upper', 'lower', 'outside', 'garage'];
@@ -144,6 +172,35 @@
     const tx = Math.floor(px / T), ty = Math.floor(py / T);
     if (tx < 0 || tx >= w.mw || ty < 0 || ty >= w.mh) return true;
     return w.solid[ty][tx];
+  }
+
+  // ---------------- examine glow ----------------
+  // Interactable objects light up as Matt approaches, so hunting for the next
+  // thing to look at is a matter of walking around rather than mashing E at
+  // every wall. Range is about ten feet: tiles read as roughly 3ft here, so
+  // four tiles. Things already examined stop glowing, which turns the glow
+  // into a to-do list rather than permanent Christmas lights.
+  const GLOW_R = 64;
+  function glowAt(hot) {
+    if (!hot) return 0;
+    if (seen.has(floorId + ':' + hot.idx)) return 0;
+    const dx = player.x - hot.cx, dy = player.y - hot.cy;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d > GLOW_R) return 0;
+    const near = Math.min(1, (1 - d / GLOW_R) * 1.4);
+    return near * (0.72 + 0.28 * Math.sin(performance.now() / 240));
+  }
+  // Draws a sprite with a warm halo around its silhouette. The repeated passes
+  // are the point: canvas shadows stack, and a single pass is nearly invisible
+  // against a warm wood floor. Three reads clearly without blowing out.
+  function drawHalo(o, img, x, y, a) {
+    g.shadowColor = 'rgba(255,236,158,' + Math.min(1, a).toFixed(3) + ')';
+    g.shadowBlur = 7 + a * 13;
+    for (let i = 0; i < 3; i++) {
+      if (o && o.hi) g.drawImage(o.hi, x, y, o.w, o.h);
+      else g.drawImage(img, x, y);
+    }
+    g.shadowBlur = 0;
   }
 
   // ---------------- camera ----------------
@@ -418,6 +475,24 @@
       if (e.y > camY + VH + 8 || e.y + e.o.h < camY - 8) continue;
       list.push(e);
     }
+    // Halos for interactables baked into the background (wall art, rugs).
+    // Redrawing the same pixels is invisible; only the shadow spills out. Done
+    // before the entity pass so Matt still walks in front of them.
+    for (const h of w.hotArt) {
+      const a = glowAt(h.hot);
+      if (a > 0) drawHalo(h.o, h.o.img, h.x, h.y, a);
+    }
+    // Contact shadows, as their own pass so no object's shadow ever lands on
+    // top of another object's sprite. Smoothing is enabled just for these:
+    // nearest-neighbour scaling would band the gradient into hard rings.
+    g.imageSmoothingEnabled = true;
+    for (const e of list) {
+      // height is capped: uncapped, a 16-tile house gets a 96px-deep blob
+      const sw = e.fw * T * 1.05, sh = Math.min(24, Math.max(6, sw * 0.36));
+      g.drawImage(SPR.shadow, e.x + e.o.w / 2 - sw / 2, e.base - sh / 2 - 1, sw, sh);
+    }
+    g.imageSmoothingEnabled = false;
+
     const frames = SPR.matt[player.dir];
     const idx = player.moving ? [1, 0, 2, 0][Math.floor(player.animT * 6) % 4] : 0;
     list.push({
@@ -427,6 +502,10 @@
     });
     list.sort((a, b) => a.base - b.base);
     for (const e of list) {
+      if (e.hot) {
+        const glow = glowAt(e.hot);
+        if (glow > 0) drawHalo(e.o, e.img, e.x, e.y, glow);
+      }
       if (e.isPlayer) {
         g.globalAlpha = 0.18; g.fillStyle = '#000';
         g.beginPath();

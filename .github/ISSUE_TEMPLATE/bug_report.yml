@@ -1,0 +1,48 @@
+name: Bug report
+description: Something in the game is broken, stuck, or looks wrong.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for playing. The more specific you are, the faster this gets fixed.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      placeholder: I walked into the neighbour's garage and the screen stayed black.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How do I make it happen?
+      placeholder: |
+        1. Go outside
+        2. Walk to the house at the bottom left
+        3. Walk up the driveway into the open garage
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where were you?
+      options:
+        - Title screen
+        - Upstairs
+        - Downstairs
+        - Outside, in the cul-de-sac
+        - The neighbour's garage
+        - Somewhere else / not sure
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Chrome on Windows 11 / Safari on iPhone
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots help a lot. Drag them straight into this box.

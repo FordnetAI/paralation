@@ -53,6 +53,19 @@ Paralation: a play on parasite and collaboration. Top down gameplay and art in t
 - Level up: every stat +1, stamina max +2, full stamina restore, celebration dialog. Curve: xpNext = 20 * 1.35^(level-1).
 - UI: C or Tab opens the character panel (portrait, level, XP bar, stat bars). Stamina HUD bar bottom-left when not full. Gold "+5 XP" floats over Matt's head on new examines.
 
+### Grounding and the examine glow (v0.6)
+- Contact shadows: every non-flat entity gets a soft shadow blob stretched under its footprint. This was the fix for Tim's "assets look pasted on" note; the cause was not the AI art, it was that nothing except Matt cast a shadow, so every sprite read as a sticker on the floorboards. One render pass fixed all 30 sprites at once with no regeneration.
+- The blob is pre-rendered once in sprites.js (SPR.shadow) as a radial gradient. Do NOT swap it back to ctx.ellipse: a hard-edged oval is its own kind of pasted-on, and building a gradient per object per frame is far too slow. Smoothing is toggled ON for just this pass, because nearest-neighbour scaling bands the gradient into rings.
+- Shadow height is capped at 24px. Uncapped, a 16-tile-wide house got a 96px-deep blob.
+- Examine glow: interactable objects halo warm gold within GLOW_R (64px, about four tiles, roughly the "ten feet" Tim asked for), ramping with proximity and gently pulsing. Objects already examined stop glowing, which turns the glow into a to-do list instead of permanent Christmas lights. Change that by dropping the `seen.has` check at the top of glowAt().
+- The halo draws the sprite THREE times with a canvas shadow set. Canvas shadows stack, and one pass is nearly invisible over a warm wood floor. If the glow ever looks weak, raise the pass count or the alpha in drawHalo(), not GLOW_R.
+- Interactables baked into the background (wall art like the poster and beach photo, plus floor flats) cannot glow from the entity pass, so buildFloor records them in world[id].hotArt and render redraws them with a halo BEFORE the entity pass. Redrawing identical pixels is invisible; only the shadow spills out, and drawing early keeps Matt in front of them.
+- Cost measured at 0.07 ms/frame indoors and 0.17 ms/frame outside, against a 16.7 ms budget.
+
+### Feedback (added when the game went public)
+- index.html has a small HTML bar under the canvas linking to two GitHub issue forms. It is deliberately outside the canvas so it can never steal a keypress from the game.
+- Templates live in .github/ISSUE_TEMPLATE/ (bug_report.yml, feature_request.yml) and auto-apply the `bug` and `enhancement` labels. The bug form asks which floor the player was on, because "it broke" without a location is unactionable.
+
 ### Deploy (live as of Aug 15 2026)
 - Live at https://paralation.web.app. Source at https://github.com/FordnetAI/paralation (public).
 - Hosted on Firebase Hosting, project `fordham-ent`, on its OWN hosting site called `paralation`. It is deliberately NOT a subpath of the company site.

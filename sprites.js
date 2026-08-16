@@ -765,5 +765,21 @@ const SPR = (() => {
     R(g, 16, 0, 2, 12, '#a37c48');
   });
 
-  return { cnv: cnv, matt: matt, para: para, OBJ: OBJ, wall: wall, floor: floor };
+  // Soft contact shadow, stretched under every object at draw time. Objects
+  // without one read as pasted onto the floor rather than standing on it.
+  // Pre-rendered once because building a radial gradient per object per frame
+  // is far too slow, and a hard-edged ellipse reads as a sticker of its own.
+  const shadow = (() => {
+    const S = 64, c = cnv(S, S), x = c.getContext('2d');
+    const gr = x.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+    gr.addColorStop(0, 'rgba(0,0,0,0.62)');
+    gr.addColorStop(0.45, 'rgba(0,0,0,0.34)');
+    gr.addColorStop(0.75, 'rgba(0,0,0,0.10)');
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = gr;
+    x.fillRect(0, 0, S, S);
+    return c;
+  })();
+
+  return { cnv: cnv, matt: matt, para: para, OBJ: OBJ, wall: wall, floor: floor, shadow: shadow };
 })();
