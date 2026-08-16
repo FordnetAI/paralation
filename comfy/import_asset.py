@@ -39,6 +39,18 @@ SIZES = {
     'fence': (16, 20), 'lamp': (14, 58), 'car': (32, 50), 'trash': (16, 24),
     'hoop': (22, 62), 'weightBench': (32, 26), 'weights': (26, 16),
     'workbench': (48, 30), 'boxes': (24, 26),
+    # the village + school (workflows 6-8). PROVISIONAL until their maps are
+    # built: footprints may get retuned when the high street is laid out.
+    'pubBell': (192, 168), 'pubGoat': (192, 168), 'shopSM': (160, 168),
+    'shopOther': (160, 168), 'butcher': (144, 160), 'indian': (160, 168),
+    'postOffice': (144, 160), 'changingRooms': (192, 96), 'socialClub': (224, 144),
+    'swings': (80, 56), 'seesaw': (64, 32), 'roundabout': (56, 40),
+    'goalFootball': (64, 44), 'benchP': (48, 28), 'planter': (32, 24),
+    'pillarBox': (16, 36), 'signV': (24, 48), 'binV': (16, 28),
+    'posterCat': (16, 22), 'flyerTrip': (16, 22),
+    'schoolMain': (384, 208), 'schoolGym': (256, 160), 'schoolGate': (96, 64),
+    'flagpole': (16, 80), 'busCoach': (96, 52), 'bikeShed': (96, 56),
+    'standSmall': (128, 72),
 }
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')

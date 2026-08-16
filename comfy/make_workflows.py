@@ -44,6 +44,7 @@ VIEWS = {
 # roughly square props but throws away a quarter of the frame on a house that is
 # drawn 4:3, and more than half on a lamp post.
 SQUARE, WIDE, TALL = (1024, 1024), (1216, 896), (832, 1216)
+XWIDE = (1344, 768)  # the school main building; very wide frontage
 
 
 def full_prompt(item_text, view='front'):
@@ -120,6 +121,64 @@ WORKFLOWS = {
         ('lamp', 'tall street lamp post with a glowing lantern head', 'front', TALL),
         ('hoop', 'basketball hoop, white backboard and orange rim on a metal pole',
          'front', TALL),
+    ],
+    # ============================================================
+    # The village (Tim's brief, Aug 16 2026): British countryside high street.
+    # Shop names are deliberate and personal - keep them EXACTLY as written.
+    # Flux renders short sign text decently; garbled signs are a re-roll, not
+    # a prompt failure. See ClaudeParalation.md for the setting-shift note.
+    # ============================================================
+    'paralation-6-village': [
+        ('pubBell', 'traditional english country pub called THE BELL, cream painted walls, '
+                    'black timber beams, hanging sign with a golden bell, chimneys, '
+                    'flower baskets', 'ext', WIDE),
+        ('pubGoat', 'old stone english village pub called THE GOAT, slate roof, hanging '
+                    'sign with a white goat, low windows with warm light', 'ext', WIDE),
+        ('shopSM', 'small english village convenience store with sign reading S&M STORES, '
+                   'brick front, green awning, produce crates outside', 'ext', WIDE),
+        ('shopOther', 'quirky english corner shop with sign reading THE OTHER SHOP, '
+                      'faded red awning, cluttered shop window', 'ext', WIDE),
+        ('butcher', 'traditional english butchers shop front, red and white striped awning, '
+                    'hanging sign with a pig, tiled lower wall', 'ext', WIDE),
+        ('indian', 'indian restaurant in an english village terrace, warm red and gold '
+                   'painted front, elegant sign, glowing windows, curry house', 'ext', WIDE),
+        ('postOffice', 'small english village post office, red POST OFFICE sign, '
+                       'brick front, noticeboard in the window', 'ext', WIDE),
+        ('changingRooms', 'small brick sports changing room pavilion, two doors, low roof',
+         'ext', WIDE),
+        ('socialClub', 'english sports and social club, single storey clubhouse, '
+                       'pitched roof, sign reading SPORTS & SOCIAL', 'ext', WIDE),
+    ],
+    'paralation-7-parks': [
+        ('swings', 'playground swing set with two swings, green metal frame', 'front'),
+        ('seesaw', 'playground see-saw, red metal with two seats', 'front'),
+        ('roundabout', 'playground roundabout merry-go-round, low round platform with '
+                       'metal handles', 'front'),
+        ('goalFootball', 'white football goal with net', 'front'),
+        ('benchP', 'wooden park bench with cast iron ends', 'front'),
+        ('planter', 'stone flower planter overflowing with colourful flowers', 'front'),
+        ('pillarBox', 'red british royal mail pillar box', 'front', TALL),
+        ('signV', 'wooden village fingerpost sign with three pointing arms', 'front', TALL),
+        ('binV', 'black cast iron village litter bin with gold trim', 'front'),
+        ('posterCat', 'hand drawn MISSING CAT poster on paper, sad cat face, '
+                      'pinned to a board', 'front'),
+        ('flyerTrip', 'school trip flyer pinned to a noticeboard, forest photo, '
+                      'bold heading', 'front'),
+    ],
+    'paralation-8-school': [
+        ('schoolMain', 'british secondary school main building, victorian red brick, '
+                       'tall arched windows, clock over the entrance, slate roof',
+         'ext', XWIDE),
+        ('schoolGym', 'school sports hall, brick and metal siding, high windows, '
+                      'double doors', 'ext', WIDE),
+        ('schoolGate', 'school entrance gates, wrought iron between brick piers, '
+                       'small sign board', 'front', WIDE),
+        ('flagpole', 'tall white flagpole with a flag', 'front', TALL),
+        ('busCoach', 'small white school minibus coach with blue stripe, side view',
+         'front', WIDE),
+        ('bikeShed', 'covered school bicycle shelter with a few bikes inside', 'front', WIDE),
+        ('standSmall', 'small metal spectator stand with three bench rows and a canopy',
+         'front', WIDE),
     ],
     'paralation-5-yard': [
         ('tree', 'large leafy oak tree with a thick brown trunk and full green canopy',

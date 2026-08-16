@@ -1,0 +1,664 @@
+{
+ "prompt": {
+  "1": {
+   "class_type": "CheckpointLoaderSimple",
+   "inputs": {
+    "ckpt_name": "flux1-dev-fp8.safetensors"
+   }
+  },
+  "2": {
+   "class_type": "LoraLoader",
+   "inputs": {
+    "model": [
+     "1",
+     0
+    ],
+    "clip": [
+     "1",
+     1
+    ],
+    "lora_name": "Ghibli_style_flux.safetensors",
+    "strength_model": 0.95,
+    "strength_clip": 0.95
+   }
+  },
+  "5": {
+   "class_type": "EmptySD3LatentImage",
+   "inputs": {
+    "width": 1216,
+    "height": 896,
+    "batch_size": 1
+   }
+  },
+  "30": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, traditional english country pub called THE BELL, cream painted walls, black timber beams, hanging sign with a golden bell, chimneys, flower baskets, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "31": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "30",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "32": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "31",
+     0
+    ],
+    "negative": [
+     "31",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987650,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "33": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "32",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "34": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "33",
+     0
+    ],
+    "filename_prefix": "paralation/pubBell"
+   }
+  },
+  "35": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, old stone english village pub called THE GOAT, slate roof, hanging sign with a white goat, low windows with warm light, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "36": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "35",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "37": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "36",
+     0
+    ],
+    "negative": [
+     "36",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987651,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "38": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "37",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "39": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "38",
+     0
+    ],
+    "filename_prefix": "paralation/pubGoat"
+   }
+  },
+  "40": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, small english village convenience store with sign reading S&M STORES, brick front, green awning, produce crates outside, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "41": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "40",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "42": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "41",
+     0
+    ],
+    "negative": [
+     "41",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987652,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "43": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "42",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "44": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "43",
+     0
+    ],
+    "filename_prefix": "paralation/shopSM"
+   }
+  },
+  "45": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, quirky english corner shop with sign reading THE OTHER SHOP, faded red awning, cluttered shop window, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "46": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "45",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "47": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "46",
+     0
+    ],
+    "negative": [
+     "46",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987653,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "48": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "47",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "49": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "48",
+     0
+    ],
+    "filename_prefix": "paralation/shopOther"
+   }
+  },
+  "50": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, traditional english butchers shop front, red and white striped awning, hanging sign with a pig, tiled lower wall, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "51": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "50",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "52": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "51",
+     0
+    ],
+    "negative": [
+     "51",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987654,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "53": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "52",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "54": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "53",
+     0
+    ],
+    "filename_prefix": "paralation/butcher"
+   }
+  },
+  "55": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, indian restaurant in an english village terrace, warm red and gold painted front, elegant sign, glowing windows, curry house, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "56": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "55",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "57": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "56",
+     0
+    ],
+    "negative": [
+     "56",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987655,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "58": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "57",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "59": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "58",
+     0
+    ],
+    "filename_prefix": "paralation/indian"
+   }
+  },
+  "60": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, small english village post office, red POST OFFICE sign, brick front, noticeboard in the window, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "61": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "60",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "62": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "61",
+     0
+    ],
+    "negative": [
+     "61",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987656,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "63": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "62",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "64": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "63",
+     0
+    ],
+    "filename_prefix": "paralation/postOffice"
+   }
+  },
+  "65": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, small brick sports changing room pavilion, two doors, low roof, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "66": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "65",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "67": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "66",
+     0
+    ],
+    "negative": [
+     "66",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987657,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "68": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "67",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "69": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "68",
+     0
+    ],
+    "filename_prefix": "paralation/changingRooms"
+   }
+  },
+  "70": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, english sports and social club, single storey clubhouse, pitched roof, sign reading SPORTS & SOCIAL, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "71": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "70",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "72": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "71",
+     0
+    ],
+    "negative": [
+     "71",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987658,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "73": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "72",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "74": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "73",
+     0
+    ],
+    "filename_prefix": "paralation/socialClub"
+   }
+  }
+ }
+}

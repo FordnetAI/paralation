@@ -1,0 +1,2686 @@
+{
+ "last_node_id": 74,
+ "last_link_id": 83,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "CheckpointLoaderSimple",
+   "pos": [
+    40,
+    80
+   ],
+   "size": [
+    340,
+    100
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CheckpointLoaderSimple"
+   },
+   "widgets_values": [
+    "flux1-dev-fp8.safetensors"
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2
+     ],
+     "slot_index": 1
+    },
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      10,
+      19,
+      28,
+      37,
+      46,
+      55,
+      64,
+      73,
+      82
+     ],
+     "slot_index": 2
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "type": "LoraLoader",
+   "pos": [
+    40,
+    240
+   ],
+   "size": [
+    340,
+    126
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "LoraLoader"
+   },
+   "widgets_values": [
+    "Ghibli_style_flux.safetensors",
+    0.95,
+    0.95
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    },
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      5,
+      14,
+      23,
+      32,
+      41,
+      50,
+      59,
+      68,
+      77
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      3,
+      12,
+      21,
+      30,
+      39,
+      48,
+      57,
+      66,
+      75
+     ],
+     "slot_index": 1
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "type": "EmptySD3LatentImage",
+   "pos": [
+    40,
+    430
+   ],
+   "size": [
+    340,
+    106
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "EmptySD3LatentImage"
+   },
+   "widgets_values": [
+    1216,
+    896,
+    1
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      8,
+      17,
+      26,
+      35,
+      44,
+      53,
+      62,
+      71,
+      80
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 30,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    60
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, traditional english country pub called THE BELL, cream painted walls, black timber beams, hanging sign with a golden bell, chimneys, flower baskets, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      4
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 31,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    60
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 4
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      6,
+      7
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 32,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    60
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123450,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 5
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 6
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 7
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 33,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    60
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 9
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      11
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 34,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    60
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/pubBell"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 11
+    }
+   ]
+  },
+  {
+   "id": 35,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    300
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, old stone english village pub called THE GOAT, slate roof, hanging sign with a white goat, low windows with warm light, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      13
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    300
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      15,
+      16
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    300
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123451,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 14
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 15
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 16
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      18
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    300
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 18
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      20
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 39,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    300
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/pubGoat"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 20
+    }
+   ]
+  },
+  {
+   "id": 40,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    540
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, small english village convenience store with sign reading S&M STORES, brick front, green awning, produce crates outside, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      22
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 41,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    540
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 22
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      24,
+      25
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 42,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    540
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123452,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 23
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 24
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 25
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 26
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      27
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 43,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    540
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 27
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 28
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      29
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 44,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    540
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/shopSM"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 29
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    780
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, quirky english corner shop with sign reading THE OTHER SHOP, faded red awning, cluttered shop window, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 30
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      31
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    780
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 31
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      33,
+      34
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 47,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    780
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123453,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 32
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 33
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 34
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 35
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      36
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 48,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    780
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 21,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 36
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 37
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      38
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 49,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    780
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 22,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/shopOther"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 38
+    }
+   ]
+  },
+  {
+   "id": 50,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    1020
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 23,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, traditional english butchers shop front, red and white striped awning, hanging sign with a pig, tiled lower wall, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 39
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      40
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 51,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1020
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 24,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 40
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      42,
+      43
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 52,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1020
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 25,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123454,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 41
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 42
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 43
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 44
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      45
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 53,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    1020
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 26,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 45
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 46
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      47
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 54,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    1020
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 27,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/butcher"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 47
+    }
+   ]
+  },
+  {
+   "id": 55,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    1260
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 28,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, indian restaurant in an english village terrace, warm red and gold painted front, elegant sign, glowing windows, curry house, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 48
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      49
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 56,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1260
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 29,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 49
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      51,
+      52
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 57,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1260
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 30,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123455,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 50
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 51
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 52
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 53
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      54
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 58,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    1260
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 31,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 54
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 55
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      56
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 59,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    1260
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 32,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/indian"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 56
+    }
+   ]
+  },
+  {
+   "id": 60,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    1500
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 33,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, small english village post office, red POST OFFICE sign, brick front, noticeboard in the window, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 57
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      58
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 61,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1500
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 34,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 58
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      60,
+      61
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 62,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1500
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 35,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123456,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 59
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 60
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 61
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 62
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      63
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 63,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    1500
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 36,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 63
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 64
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      65
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 64,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    1500
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 37,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/postOffice"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 65
+    }
+   ]
+  },
+  {
+   "id": 65,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    1740
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 38,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, small brick sports changing room pavilion, two doors, low roof, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 66
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      67
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 66,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1740
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 39,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 67
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      69,
+      70
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 67,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1740
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 40,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123457,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 68
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 69
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 70
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 71
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      72
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 68,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    1740
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 41,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 72
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 73
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      74
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 69,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    1740
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 42,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/changingRooms"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 74
+    }
+   ]
+  },
+  {
+   "id": 70,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    1980
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 43,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, english sports and social club, single storey clubhouse, pitched roof, sign reading SPORTS & SOCIAL, hand drawn animation building, front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 75
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      76
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 71,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1980
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 44,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 76
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      78,
+      79
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 72,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1980
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 45,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123458,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 77
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 78
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 79
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 80
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      81
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 73,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    1980
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 46,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 81
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 82
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      83
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 74,
+   "type": "SaveImage",
+   "pos": [
+    1760,
+    1980
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 47,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/socialClub"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 83
+    }
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   2,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   1,
+   1,
+   2,
+   1,
+   "CLIP"
+  ],
+  [
+   3,
+   2,
+   1,
+   30,
+   0,
+   "CLIP"
+  ],
+  [
+   4,
+   30,
+   0,
+   31,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   5,
+   2,
+   0,
+   32,
+   0,
+   "MODEL"
+  ],
+  [
+   6,
+   31,
+   0,
+   32,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   7,
+   31,
+   0,
+   32,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   8,
+   5,
+   0,
+   32,
+   3,
+   "LATENT"
+  ],
+  [
+   9,
+   32,
+   0,
+   33,
+   0,
+   "LATENT"
+  ],
+  [
+   10,
+   1,
+   2,
+   33,
+   1,
+   "VAE"
+  ],
+  [
+   11,
+   33,
+   0,
+   34,
+   0,
+   "IMAGE"
+  ],
+  [
+   12,
+   2,
+   1,
+   35,
+   0,
+   "CLIP"
+  ],
+  [
+   13,
+   35,
+   0,
+   36,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   2,
+   0,
+   37,
+   0,
+   "MODEL"
+  ],
+  [
+   15,
+   36,
+   0,
+   37,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   16,
+   36,
+   0,
+   37,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   17,
+   5,
+   0,
+   37,
+   3,
+   "LATENT"
+  ],
+  [
+   18,
+   37,
+   0,
+   38,
+   0,
+   "LATENT"
+  ],
+  [
+   19,
+   1,
+   2,
+   38,
+   1,
+   "VAE"
+  ],
+  [
+   20,
+   38,
+   0,
+   39,
+   0,
+   "IMAGE"
+  ],
+  [
+   21,
+   2,
+   1,
+   40,
+   0,
+   "CLIP"
+  ],
+  [
+   22,
+   40,
+   0,
+   41,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   23,
+   2,
+   0,
+   42,
+   0,
+   "MODEL"
+  ],
+  [
+   24,
+   41,
+   0,
+   42,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   25,
+   41,
+   0,
+   42,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   26,
+   5,
+   0,
+   42,
+   3,
+   "LATENT"
+  ],
+  [
+   27,
+   42,
+   0,
+   43,
+   0,
+   "LATENT"
+  ],
+  [
+   28,
+   1,
+   2,
+   43,
+   1,
+   "VAE"
+  ],
+  [
+   29,
+   43,
+   0,
+   44,
+   0,
+   "IMAGE"
+  ],
+  [
+   30,
+   2,
+   1,
+   45,
+   0,
+   "CLIP"
+  ],
+  [
+   31,
+   45,
+   0,
+   46,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   32,
+   2,
+   0,
+   47,
+   0,
+   "MODEL"
+  ],
+  [
+   33,
+   46,
+   0,
+   47,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   34,
+   46,
+   0,
+   47,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   35,
+   5,
+   0,
+   47,
+   3,
+   "LATENT"
+  ],
+  [
+   36,
+   47,
+   0,
+   48,
+   0,
+   "LATENT"
+  ],
+  [
+   37,
+   1,
+   2,
+   48,
+   1,
+   "VAE"
+  ],
+  [
+   38,
+   48,
+   0,
+   49,
+   0,
+   "IMAGE"
+  ],
+  [
+   39,
+   2,
+   1,
+   50,
+   0,
+   "CLIP"
+  ],
+  [
+   40,
+   50,
+   0,
+   51,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   41,
+   2,
+   0,
+   52,
+   0,
+   "MODEL"
+  ],
+  [
+   42,
+   51,
+   0,
+   52,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   43,
+   51,
+   0,
+   52,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   44,
+   5,
+   0,
+   52,
+   3,
+   "LATENT"
+  ],
+  [
+   45,
+   52,
+   0,
+   53,
+   0,
+   "LATENT"
+  ],
+  [
+   46,
+   1,
+   2,
+   53,
+   1,
+   "VAE"
+  ],
+  [
+   47,
+   53,
+   0,
+   54,
+   0,
+   "IMAGE"
+  ],
+  [
+   48,
+   2,
+   1,
+   55,
+   0,
+   "CLIP"
+  ],
+  [
+   49,
+   55,
+   0,
+   56,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   50,
+   2,
+   0,
+   57,
+   0,
+   "MODEL"
+  ],
+  [
+   51,
+   56,
+   0,
+   57,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   52,
+   56,
+   0,
+   57,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   53,
+   5,
+   0,
+   57,
+   3,
+   "LATENT"
+  ],
+  [
+   54,
+   57,
+   0,
+   58,
+   0,
+   "LATENT"
+  ],
+  [
+   55,
+   1,
+   2,
+   58,
+   1,
+   "VAE"
+  ],
+  [
+   56,
+   58,
+   0,
+   59,
+   0,
+   "IMAGE"
+  ],
+  [
+   57,
+   2,
+   1,
+   60,
+   0,
+   "CLIP"
+  ],
+  [
+   58,
+   60,
+   0,
+   61,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   59,
+   2,
+   0,
+   62,
+   0,
+   "MODEL"
+  ],
+  [
+   60,
+   61,
+   0,
+   62,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   61,
+   61,
+   0,
+   62,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   62,
+   5,
+   0,
+   62,
+   3,
+   "LATENT"
+  ],
+  [
+   63,
+   62,
+   0,
+   63,
+   0,
+   "LATENT"
+  ],
+  [
+   64,
+   1,
+   2,
+   63,
+   1,
+   "VAE"
+  ],
+  [
+   65,
+   63,
+   0,
+   64,
+   0,
+   "IMAGE"
+  ],
+  [
+   66,
+   2,
+   1,
+   65,
+   0,
+   "CLIP"
+  ],
+  [
+   67,
+   65,
+   0,
+   66,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   68,
+   2,
+   0,
+   67,
+   0,
+   "MODEL"
+  ],
+  [
+   69,
+   66,
+   0,
+   67,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   70,
+   66,
+   0,
+   67,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   71,
+   5,
+   0,
+   67,
+   3,
+   "LATENT"
+  ],
+  [
+   72,
+   67,
+   0,
+   68,
+   0,
+   "LATENT"
+  ],
+  [
+   73,
+   1,
+   2,
+   68,
+   1,
+   "VAE"
+  ],
+  [
+   74,
+   68,
+   0,
+   69,
+   0,
+   "IMAGE"
+  ],
+  [
+   75,
+   2,
+   1,
+   70,
+   0,
+   "CLIP"
+  ],
+  [
+   76,
+   70,
+   0,
+   71,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   77,
+   2,
+   0,
+   72,
+   0,
+   "MODEL"
+  ],
+  [
+   78,
+   71,
+   0,
+   72,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   79,
+   71,
+   0,
+   72,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   80,
+   5,
+   0,
+   72,
+   3,
+   "LATENT"
+  ],
+  [
+   81,
+   72,
+   0,
+   73,
+   0,
+   "LATENT"
+  ],
+  [
+   82,
+   1,
+   2,
+   73,
+   1,
+   "VAE"
+  ],
+  [
+   83,
+   73,
+   0,
+   74,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}
