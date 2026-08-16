@@ -69,7 +69,9 @@ WORKFLOWS = {
         ('bookshelf', 'tall wooden bookshelf full of colorful books and comics', 'front'),
         ('desk', 'wooden computer desk with monitor, keyboard, red mug and eyeglasses on it', 'front'),
         ('chair', 'simple wooden chair', 'front'),
-        ('backpack', 'red school backpack sitting on the floor', 'front'),
+        # olive, not red: the Ghibli-soft red wash sat too close to the magenta
+        # backdrop and the keyer ate the bag (same lesson as the salmon rug)
+        ('backpack', 'worn olive green canvas school backpack sitting on the floor', 'front'),
         ('dresser', 'wide low wooden dresser with two drawers and round knobs', 'front'),
         ('poster', 'retro space rocket poster with dark blue background', 'front'),
         ('mirrorW', 'gold framed wall mirror', 'front'),
@@ -154,7 +156,9 @@ WORKFLOWS = {
         ('seesaw', 'playground see-saw, red metal with two seats', 'front'),
         ('roundabout', 'playground roundabout merry-go-round, low round platform with '
                        'metal handles', 'front'),
-        ('goalFootball', 'white football goal with net', 'front'),
+        # no net: fine mesh over the magenta backdrop is unkeyable, and bare
+        # posts are authentic for a park pitch anyway
+        ('goalFootball', 'white football goal, bare white posts and crossbar, no net', 'front'),
         ('benchP', 'wooden park bench with cast iron ends', 'front'),
         ('planter', 'stone flower planter overflowing with colourful flowers', 'front'),
         ('pillarBox', 'red british royal mail pillar box', 'front', TALL),
@@ -188,7 +192,9 @@ WORKFLOWS = {
         ('fence', 'short section of white picket fence, four pickets', 'front'),
         ('trash', 'green wheeled garbage bin with a closed lid', 'front'),
         ('boxes', 'stack of two brown cardboard moving boxes', 'front'),
-        ('weightBench', 'black padded weight lifting bench with steel legs', 'front'),
+        # "weight bench" alone reads as an office chair to the model; be literal
+        ('weightBench', 'long low flat gym weight bench, horizontal dark padded bench '
+                        'on four steel legs, side view', 'front'),
         ('weights', 'steel barbell loaded with round black weight plates', 'front'),
         ('workbench', 'wooden garage workbench with hand tools scattered on top', 'front'),
     ],
