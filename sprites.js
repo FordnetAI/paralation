@@ -176,54 +176,73 @@ const SPR = (() => {
   ]);
 
   // ---------------- floors ----------------
+  // Art direction v2: ground is painted soft. vnoise is smooth value noise in
+  // WORLD tile coordinates (bilinear over a coarse lattice), so tonal blotches
+  // flow seamlessly across tile borders instead of reading as a 16px grid.
+  // Tiles paint in 4px sub-blocks blended through it.
+  function vnoise(tx, ty, k, scale) {
+    const fx = tx / scale, fy = ty / scale;
+    const x0 = Math.floor(fx), y0 = Math.floor(fy);
+    const sx = fx - x0, sy = fy - y0;
+    const u = sx * sx * (3 - 2 * sx), v = sy * sy * (3 - 2 * sy);
+    const a = rnd(x0, y0, k), b2 = rnd(x0 + 1, y0, k);
+    const c2 = rnd(x0, y0 + 1, k), d2 = rnd(x0 + 1, y0 + 1, k);
+    return a + (b2 - a) * u + (c2 - a) * v + (a - b2 - c2 + d2) * u * v;
+  }
+  function softFill(g, px, py, tx, ty, dark, light, k, scale) {
+    for (let by = 0; by < 4; by++) {
+      for (let bx = 0; bx < 4; bx++) {
+        const t = vnoise(tx + bx / 4, ty + by / 4, k, scale);
+        R(g, px + bx * 4, py + by * 4, 4, 4, mix(dark, light, t));
+      }
+    }
+  }
+
   function floor(g, px, py, ch, tx, ty) {
-    if (ch === 'w') { // wood planks
-      R(g, px, py, T, T, '#b48a5c');
-      if (rnd(tx, ty, 1) > 0.5) R(g, px, py, T, T, 'rgba(60,35,15,0.05)');
-      for (let i = 0; i < 4; i++) R(g, px, py + i * 4 + 3, T, 1, 'rgba(92,62,32,0.4)');
-      const sx = 2 + Math.floor(rnd(tx, ty, 2) * 12);
-      const sy = 4 * Math.floor(rnd(tx, ty, 3) * 4);
-      R(g, px + sx, py + sy, 1, 3, 'rgba(92,62,32,0.4)');
-    } else if (ch === 'b') { // bathroom checker
-      R(g, px, py, T, T, '#cfe0e4');
-      R(g, px, py, 8, 8, '#bdd3d8'); R(g, px + 8, py + 8, 8, 8, '#bdd3d8');
-      R(g, px, py + 15, T, 1, 'rgba(120,150,155,0.5)');
-      R(g, px + 15, py, 1, T, 'rgba(120,150,155,0.5)');
-    } else if (ch === 'k') { // kitchen tile
-      R(g, px, py, T, T, '#d9d0ba');
-      R(g, px, py + 15, T, 1, '#bcb096'); R(g, px + 15, py, 1, T, '#bcb096');
-      if (rnd(tx, ty, 4) > 0.7) R(g, px + 4 + Math.floor(rnd(tx, ty, 5) * 8), py + 4 + Math.floor(rnd(tx, ty, 6) * 8), 1, 1, '#c4b89c');
-    } else if (ch === 'G') { // lawn
-      R(g, px, py, T, T, '#6fa845');
-      if (rnd(tx, ty, 7) > 0.55) R(g, px, py, T, T, 'rgba(40,90,30,0.06)');
-      for (let i = 0; i < 3; i++) {
-        const bx = Math.floor(rnd(tx, ty, 8 + i) * 14);
-        const by = Math.floor(rnd(tx, ty, 11 + i) * 14);
-        R(g, px + bx, py + by, 1, 2, 'rgba(45,100,35,0.55)');
+    if (ch === 'w') { // wood, soft warm planks
+      softFill(g, px, py, tx, ty, '#a8815a', '#bd9268', 1, 5);
+      for (let i = 0; i < 2; i++) R(g, px, py + i * 8 + 3, T, 1, 'rgba(96,66,38,0.18)');
+      if ((tx + (ty >> 1)) % 3 === 0) R(g, px + 11, py + 3, 1, 8, 'rgba(96,66,38,0.15)');
+    } else if (ch === 'b') { // bathroom, pale porcelain
+      softFill(g, px, py, tx, ty, '#ccdde1', '#dbe9ec', 2, 4);
+      if ((tx + ty) % 2) R(g, px, py, T, T, 'rgba(150,178,184,0.10)');
+      R(g, px, py + 15, T, 1, 'rgba(128,158,164,0.22)');
+      R(g, px + 15, py, 1, T, 'rgba(128,158,164,0.22)');
+    } else if (ch === 'k') { // kitchen, warm cream stone
+      softFill(g, px, py, tx, ty, '#cfc5ab', '#e0d7bf', 3, 4);
+      R(g, px, py + 15, T, 1, 'rgba(154,140,108,0.22)');
+      R(g, px + 15, py, 1, T, 'rgba(154,140,108,0.22)');
+    } else if (ch === 'G') { // meadow grass, soft blotches, sparse blades
+      softFill(g, px, py, tx, ty, '#5f9a4b', '#7fb35c', 4, 6);
+      if (rnd(tx, ty, 8) > 0.6) {
+        const bx = 2 + Math.floor(rnd(tx, ty, 9) * 11);
+        const by = 2 + Math.floor(rnd(tx, ty, 10) * 11);
+        R(g, px + bx, py + by, 1, 2, 'rgba(52,102,40,0.35)');
       }
-    } else if (ch === 'R') { // road asphalt
-      // no per-tile wash here: a flat overlay on a 16px grid makes a huge
-      // paved area read as visible checkerboard. Aggregate speckle only.
-      R(g, px, py, T, T, '#4b4a53');
-      for (let i = 0; i < 7; i++) {
-        const bx = Math.floor(rnd(tx, ty, 15 + i) * 16);
-        const by = Math.floor(rnd(tx, ty, 22 + i) * 16);
-        R(g, px + bx, py + by, 1, 1,
-          rnd(tx, ty, 29 + i) > 0.5 ? 'rgba(198,198,208,0.11)' : 'rgba(18,18,24,0.22)');
+      if (rnd(tx, ty, 11) > 0.996) { // the rare meadow flower, kept quiet
+        const bx = 3 + Math.floor(rnd(tx, ty, 12) * 9);
+        const by = 3 + Math.floor(rnd(tx, ty, 13) * 9);
+        R(g, px + bx, py + by, 2, 2,
+          rnd(tx, ty, 14) > 0.5 ? 'rgba(232,226,206,0.55)' : 'rgba(227,201,221,0.55)');
       }
-    } else if (ch === 'S' || ch === 'V' || ch === 'c') { // sidewalk / driveway / garage slab
-      const base = ch === 'S' ? '#b9b5a8' : ch === 'V' ? '#c4c0b2' : '#a9a59b';
-      R(g, px, py, T, T, base);
-      if (rnd(tx, ty, 21) > 0.7) R(g, px, py, T, T, 'rgba(90,85,75,0.06)');
-      // expansion joints on a 2-tile grid so slabs read as poured squares
-      if (tx % 2 === 0) R(g, px, py, 1, T, 'rgba(120,115,102,0.55)');
-      if (ty % 2 === 0) R(g, px, py, T, 1, 'rgba(120,115,102,0.55)');
-    } else if (ch === 'X') { // dense treeline: solid, walls the neighborhood in
-      R(g, px, py, T, T, '#2f5325');
-      for (let i = 0; i < 5; i++) {
-        const bx = Math.floor(rnd(tx, ty, 24 + i) * 13);
-        const by = Math.floor(rnd(tx, ty, 29 + i) * 13);
-        R(g, px + bx, py + by, 3, 3, i % 2 ? '#3d6b30' : '#26421d');
+    } else if (ch === 'R') { // road, soft warm asphalt
+      softFill(g, px, py, tx, ty, '#55535c', '#63616b', 5, 7);
+      if (rnd(tx, ty, 15) > 0.75) {
+        R(g, px + Math.floor(rnd(tx, ty, 16) * 15), py + Math.floor(rnd(tx, ty, 17) * 15),
+          1, 1, 'rgba(200,200,210,0.08)');
+      }
+    } else if (ch === 'S' || ch === 'V' || ch === 'c') { // stone paving
+      const warm = ch === 'V';
+      softFill(g, px, py, tx, ty, warm ? '#b6b1a2' : '#aeaa9c', warm ? '#cbc6b6' : '#c2beb0', 6, 5);
+      if (tx % 2 === 0) R(g, px, py, 1, T, 'rgba(120,115,102,0.28)');
+      if (ty % 2 === 0) R(g, px, py, T, 1, 'rgba(120,115,102,0.28)');
+    } else if (ch === 'X') { // treeline canopy, soft dark foliage
+      softFill(g, px, py, tx, ty, '#2c4d24', '#40693a', 7, 4);
+      for (let i = 0; i < 2; i++) {
+        const bx = Math.floor(rnd(tx, ty, 24 + i) * 10);
+        const by = Math.floor(rnd(tx, ty, 27 + i) * 10);
+        g.fillStyle = i ? 'rgba(70,116,60,0.5)' : 'rgba(28,50,22,0.45)';
+        g.beginPath(); g.ellipse(px + 3 + bx, py + 3 + by, 4, 3, 0, 0, Math.PI * 2); g.fill();
       }
     } else {
       R(g, px, py, T, T, '#b48a5c');
@@ -242,18 +261,23 @@ const SPR = (() => {
   function wall(g, px, py, type, belowFloor, aboveVoid) {
     const wp = WALLPAPER[type];
     if (wp.wood) {
-      R(g, px, py, T, T, wp.base);
-      R(g, px + 4, py, 1, T, wp.dark); R(g, px + 10, py, 1, T, wp.dark);
-      R(g, px, py, 1, T, '#54401f'); R(g, px + 15, py, 1, T, '#54401f');
+      softFill(g, px, py, Math.floor(px / T), Math.floor(py / T), wp.dark, wp.base, 31, 4);
+      R(g, px, py, 1, T, 'rgba(60,44,20,0.5)'); R(g, px + 15, py, 1, T, 'rgba(60,44,20,0.5)');
     } else {
-      R(g, px, py, T, T, wp.base);
-      for (let x = 2; x < 16; x += 5) R(g, px + x, py, 2, T, wp.stripe);
+      // soft vertical falloff instead of hard stripes: light near the top,
+      // gently darker toward the floor, with a whisper of the old stripe
+      softFill(g, px, py, Math.floor(px / T), Math.floor(py / T), wp.stripe, wp.base, 32, 5);
+      const grad = g.createLinearGradient(0, py, 0, py + T);
+      grad.addColorStop(0, 'rgba(255,255,255,0.10)');
+      grad.addColorStop(1, 'rgba(30,24,40,0.08)');
+      g.fillStyle = grad; g.fillRect(px, py, T, T);
+      for (let x = 2; x < 16; x += 5) R(g, px + x, py, 2, T, 'rgba(255,255,255,0.05)');
     }
     if (belowFloor) {
-      R(g, px, py + 12, T, 1, '#8a6a48');
-      R(g, px, py + 13, T, 3, '#5c3f28');
+      R(g, px, py + 12, T, 1, 'rgba(150,116,80,0.8)');
+      R(g, px, py + 13, T, 3, '#6b4b30');
     }
-    if (aboveVoid) R(g, px, py, T, 2, '#241a12');
+    if (aboveVoid) R(g, px, py, T, 2, 'rgba(20,14,10,0.85)');
   }
 
   // ---------------- furniture ----------------
