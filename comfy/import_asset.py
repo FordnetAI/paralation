@@ -14,7 +14,6 @@ Usage:
 import sys
 import os
 import re
-from collections import deque
 import numpy as np
 from scipy import ndimage
 from PIL import Image
@@ -43,7 +42,39 @@ SIZES = {
 }
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
-BG_THRESHOLD = 60   # color distance from corner-sampled background color
+# Two-stage keying thresholds (sum-abs RGB distance):
+# SEED vs the corner average finds pixels that are unmistakably backdrop; the
+# measured backdrop vignette varies by up to ~34, so 60 covers all of it while
+# staying far from any object colour. EXPAND is measured against the FITTED
+# backdrop surface, so it can be tight too. The old single-pass threshold was
+# 180, and the houses proved that wrong: their pale tan siding sits ~130 from
+# the pink corner sample, so wherever the outline had a one-pixel gap the fill
+# poured through and ate the walls (grass showed through the sprite in game).
+SEED_THRESHOLD = 60
+EXPAND_THRESHOLD = 45
+# Shaded-backdrop test, used during expansion: a drop shadow is the backdrop
+# multiplied by a shade factor, so a shadow pixel is close to s*fitted for some
+# s. Residual is the L1 distance from that best scalar fit; the s range stops
+# bright object colours (cream walls hit s=1.48) from matching. Measured worst
+# case on the object side is the open garage mouth at residual 42.
+SHADE_RESID = 32
+SHADE_RANGE = (0.32, 1.25)
+# Assets whose raws light up the backdrop around them (glow). Additive glow is
+# neither near the fit nor a scalar shade of it, so those assets key with a
+# wide expansion distance instead -- safe exactly because their object colours
+# (near-black ironwork, bright warm lantern) are far from any pink.
+AGGRESSIVE_KEY = {'lamp'}
+AGGRESSIVE_EXPAND = 170
+# Opaque islands smaller than this that are separate from the main silhouette
+# are leftover backdrop residue (specks, detached shadow smudges), not art.
+MIN_ISLAND = 250
+# Backdrop-coloured fringe: the generator decorates some sprites with tufts and
+# smudges in the backdrop's own pink (grass tufts at house bases, despite the
+# prompt). Magenta-family means r > b and b > g by a margin -- a colour the
+# objects themselves never use except in LARGE fields (the parents' duvet, the
+# pink rug), so only small components touching transparency are removed.
+FRINGE_B_MINUS_G = 8
+MAX_FRINGE_COMP = 800
 # Distance from the FITTED local background, not from a corner sample. Chosen by
 # sweeping: a real pocket IS the backdrop so it sits near zero, while the
 # parents' dusty-pink bedding first gets nibbled at 28 and is destroyed at 34.
@@ -52,61 +83,61 @@ MIN_POCKET_AREA = 400  # px in the 1024 raw; below this it is speckle, not a gap
 PALETTE_COLORS = 32
 
 
-def key_background(im):
-    """Make background pixels transparent. Background color is sampled from
-    the four corners; removal flood-fills inward from the image border, so
-    interior regions that happen to match the background color (white pillows
-    on a white background, notes, mirror glass) are preserved as long as an
-    outline separates them from the edge."""
+def key_background(im, aggressive=False):
+    """Make background pixels transparent, in stages.
+
+    Stage 1, seed: flood from the border over pixels within SEED_THRESHOLD of
+    the corner-sampled backdrop colour. Deliberately tight: it only has to
+    catch unmistakable backdrop, and a tight limit cannot leak through outline
+    gaps into pale walls the way the old single 180 threshold did (that bug ate
+    the house siding and let the grass show through the sprites in game).
+
+    Stage 2, expand: fit the backdrop's own gradient (vignette included) from
+    the seed pixels, then grow the cleared region into anything that is either
+    within EXPAND_THRESHOLD of the fit AT ITS OWN POSITION, or reads as a
+    SHADED version of the fit (drop shadows: the backdrop times a scale
+    factor). Connectivity still rules: only pixels reachable from the border
+    are removed, so interior regions that merely resemble the backdrop (white
+    pillows, mirror glass, notes) survive exactly as before.
+
+    Stage 3, pockets: regions fully enclosed by the object -- a chair's
+    backrest slot, the gap between table legs -- never connect to the border,
+    so they are cleared by fit distance alone, guarded by enclosure and a
+    minimum area so genuine object colours are never eaten.
+
+    Stage 4, islands: small opaque fragments disconnected from the main
+    silhouette are backdrop residue (specks, detached shadow smudges).
+    """
     im = im.convert('RGBA')
-    w, h = im.size
-    px = im.load()
-    corners = [px[0, 0], px[w - 1, 0], px[0, h - 1], px[w - 1, h - 1]]
-    br = sum(c[0] for c in corners) // 4
-    bg = sum(c[1] for c in corners) // 4
-    bb = sum(c[2] for c in corners) // 4
-    lim = BG_THRESHOLD * 3
+    a = np.asarray(im, dtype=np.int16).copy()
+    h, w, _ = a.shape
+    rgb = a[:, :, :3].astype(np.float64)
+    corners = np.stack([a[0, 0, :3], a[0, w - 1, :3],
+                        a[h - 1, 0, :3], a[h - 1, w - 1, :3]]).astype(np.float64)
+    cavg = corners.mean(axis=0)
 
-    def is_bg(p):
-        return abs(p[0] - br) + abs(p[1] - bg) + abs(p[2] - bb) < lim
+    border = np.zeros((h, w), dtype=bool)
+    border[0, :] = border[-1, :] = True
+    border[:, 0] = border[:, -1] = True
+    seedable = np.abs(rgb - cavg).sum(axis=2) < SEED_THRESHOLD
+    cleared = ndimage.binary_propagation(border & seedable, mask=seedable)
 
-    visited = bytearray(w * h)
-    q = deque()
-    for x in range(w):
-        for y in (0, h - 1):
-            if not visited[y * w + x] and is_bg(px[x, y]):
-                visited[y * w + x] = 1
-                q.append((x, y))
-    for y in range(h):
-        for x in (0, w - 1):
-            if not visited[y * w + x] and is_bg(px[x, y]):
-                visited[y * w + x] = 1
-                q.append((x, y))
-    while q:
-        x, y = q.popleft()
-        r, g, b, _ = px[x, y]
-        px[x, y] = (r, g, b, 0)
-        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
-            if 0 <= nx < w and 0 <= ny < h and not visited[ny * w + nx] and is_bg(px[nx, ny]):
-                visited[ny * w + nx] = 1
-                q.append((nx, ny))
-
-    # Enclosed pockets. The flood fill above only reaches background connected
-    # to the border, so a gap ringed by the object -- a chair's backrest slot,
-    # the space between a table's legs -- survives as solid background colour.
-    # Harmless when the backdrop was white; glaring on hot pink.
-    #
-    # These backdrops are NOT flat: they carry a vignette, so a fixed distance
-    # from the corner colour cannot separate background from a terracotta pot
-    # or dusty pink bedding (measured: the backdrop varies by up to 34 across
-    # one image, which is the same ballpark as the gap to those objects).
-    # Instead fit the backdrop's own gradient from the pixels the flood fill
-    # already proved were background, then compare each survivor to the fit AT
-    # ITS OWN POSITION.
-    a = np.asarray(im, dtype=np.int16)
-    est = _bg_surface(a)
+    est = _bg_surface(a, cleared)
     if est is not None:
-        d = np.abs(a[:, :, :3].astype(np.float64) - est).sum(axis=2)
+        lim = AGGRESSIVE_EXPAND if aggressive else EXPAND_THRESHOLD
+        removable = np.abs(rgb - est).sum(axis=2) < lim
+        if not aggressive:
+            # drop shadows: best scalar s per pixel such that p ~ s * fitted
+            denom = (est * est).sum(axis=2)
+            s = (rgb * est).sum(axis=2) / np.maximum(denom, 1)
+            resid = np.abs(rgb - s[:, :, None] * est).sum(axis=2)
+            removable |= ((resid < SHADE_RESID) &
+                          (s > SHADE_RANGE[0]) & (s < SHADE_RANGE[1]))
+        cleared = ndimage.binary_propagation(cleared, mask=cleared | removable)
+    a[:, :, 3][cleared] = 0
+
+    if est is not None:
+        d = np.abs(rgb - est).sum(axis=2)
         pocket = (d < POCKET_THRESHOLD) & (a[:, :, 3] > 0)
         # Require pockets to be genuinely ENCLOSED. The flood fill already
         # cleared everything reachable from the border, so a real pocket cannot
@@ -126,16 +157,46 @@ def key_background(im):
                     pocket &= ~np.isin(lab, list(bad))
         if pocket.any():
             a[:, :, 3][pocket] = 0
-            im = Image.fromarray(a.astype(np.uint8), 'RGBA')
-    return im
+
+    # stage 4: drop small opaque islands disconnected from the main silhouette
+    op = a[:, :, 3] > 0
+    lab, n = ndimage.label(op)
+    if n > 1:
+        sizes = ndimage.sum(op, lab, range(1, n + 1))
+        main = sizes.max()
+        junk = [i + 1 for i, sz in enumerate(sizes)
+                if sz < MIN_ISLAND and sz < 0.05 * main]
+        if junk:
+            a[:, :, 3][np.isin(lab, junk)] = 0
+
+    # stage 5: small backdrop-coloured (magenta-family) clumps hanging off the
+    # silhouette -- pink grass tufts at house bases, edge smudges. Component
+    # size protects legitimately pink art: the duvet and the rug are single
+    # components tens of thousands of pixels big.
+    op = a[:, :, 3] > 0
+    fam = op & (a[:, :, 0] > a[:, :, 2]) & (a[:, :, 2] > a[:, :, 1] + FRINGE_B_MINUS_G)
+    if fam.any():
+        lab, n = ndimage.label(fam)
+        if n:
+            near_clear = ndimage.binary_dilation(~op)
+            touching = set(int(v) for v in np.unique(lab[near_clear & fam]) if v > 0)
+            sizes = ndimage.sum(fam, lab, range(1, n + 1))
+            junk = [i for i in touching if sizes[i - 1] < MAX_FRINGE_COMP]
+            if junk:
+                a[:, :, 3][np.isin(lab, junk)] = 0
+
+    return Image.fromarray(a.astype(np.uint8), 'RGBA')
 
 
-def _bg_surface(a):
-    """Least-squares quadratic fit of the backdrop, trained only on pixels the
-    border flood fill already cleared. Returns an h*w*3 estimate of what the
-    backdrop looks like at every position, vignette included."""
+def _bg_surface(a, cleared=None):
+    """Least-squares quadratic fit of the backdrop, trained only on pixels
+    already proven to be background (the `cleared` mask if given, else the
+    transparent pixels). Returns an h*w*3 estimate of what the backdrop looks
+    like at every position, vignette included."""
     h, w, _ = a.shape
-    ys, xs = np.nonzero(a[:, :, 3] == 0)
+    if cleared is None:
+        cleared = a[:, :, 3] == 0
+    ys, xs = np.nonzero(cleared)
     if len(xs) < 256:
         return None
     X, Y = xs / w - 0.5, ys / h - 0.5
@@ -194,7 +255,7 @@ def import_one(path, name):
     if name not in SIZES:
         print('  SKIP %s: unknown asset name %r' % (os.path.basename(path), name))
         return False
-    im = key_background(Image.open(path))
+    im = key_background(Image.open(path), aggressive=name in AGGRESSIVE_KEY)
     out = pixelize(im, name)
     os.makedirs(OUT_DIR, exist_ok=True)
     dest = os.path.join(OUT_DIR, name + '.png')
