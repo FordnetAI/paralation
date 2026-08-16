@@ -53,6 +53,16 @@ Paralation: a play on parasite and collaboration. Top down gameplay and art in t
 - Level up: every stat +1, stamina max +2, full stamina restore, celebration dialog. Curve: xpNext = 20 * 1.35^(level-1).
 - UI: C or Tab opens the character panel (portrait, level, XP bar, stat bars). Stamina HUD bar bottom-left when not full. Gold "+5 XP" floats over Matt's head on new examines.
 
+### Deploy (live as of Aug 15 2026)
+- Live at https://paralation.web.app. Source at https://github.com/FordnetAI/paralation (public).
+- Hosted on Firebase Hosting, project `fordham-ent`, on its OWN hosting site called `paralation`. It is deliberately NOT a subpath of the company site.
+- WHY THAT MATTERS: `D:\fordnet\FordhamEntSite\firebase.json` uses `"public": "."`, so the whole folder is the site root. A `firebase deploy --only hosting` run from the wrong directory would publish Paralation OVER fordnetai.com. Paralation carries its own firebase.json and .firebaserc with a named target, so deploys are scoped and FordhamEntSite is never touched.
+- Deploy command, from the Paralation folder: `firebase deploy --only hosting:paralation --project fordham-ent`. Always keep the `hosting:paralation` target on it.
+- The deploy ships 35 files: index.html, the four scripts, and images/. Everything else (comfy/, images-v1-backup/, shots/, dev-server.js, all the .md files) is excluded by the ignore list.
+- GOTCHA already hit: the ignore pattern `**/.*` excludes top-level dotfiles but NOT the contents of dot-directories, so the first deploy served the entire .git folder at paralation.web.app/.git/. Fixed by adding `**/.*/**`. Nothing sensitive was exposed (gh keeps credentials in the Windows credential manager, so .git/config held only the public repo URL), but check this on any new Firebase site.
+- Case sensitivity: Firebase serves from Linux, Windows does not care about case. Every images/<name>.png must match its SPR.OBJ key EXACTLY or it silently 404s and falls back to code art. Verified after deploy by counting loaded overrides in the live page: all 30.
+- Custom domain paralation.fordnetai.com is NOT set up yet. DNS for fordnetai.com is at GoDaddy (ns33/ns34.domaincontrol.com) and the apex already points at Firebase (199.36.158.100). Adding the subdomain needs a Firebase console step plus two GoDaddy A records; the CLI has no custom-domain command.
+
 ### Files
 - index.html: page shell, loads the four scripts below. Open directly in a browser, no build step.
 - sprites.js: code-drawn fallback art (pixel-string character sprites, procedural tiles and furniture). Furniture is now usually overridden by PNGs in images/; character, tiles, walls still come from here.

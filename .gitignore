@@ -8,6 +8,9 @@ shots/*.png
 
 node_modules/
 
+# firebase deploy cache
+.firebase/
+
 # python bytecode from running comfy/import_asset.py
 __pycache__/
 *.pyc

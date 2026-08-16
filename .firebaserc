@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "fordham-ent"
+  },
+  "targets": {
+    "fordham-ent": {
+      "hosting": {
+        "paralation": [
+          "paralation"
+        ]
+      }
+    }
+  }
+}
