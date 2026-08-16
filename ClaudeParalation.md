@@ -62,6 +62,20 @@ Paralation: a play on parasite and collaboration. Top down gameplay and art in t
 - Interactables baked into the background (wall art like the poster and beach photo, plus floor flats) cannot glow from the entity pass, so buildFloor records them in world[id].hotArt and render redraws them with a halo BEFORE the entity pass. Redrawing identical pixels is invisible; only the shadow spills out, and drawing early keeps Matt in front of them.
 - Cost measured at 0.07 ms/frame indoors and 0.17 ms/frame outside, against a 16.7 ms budget.
 
+### Exterior art pipeline (workflows 4 and 5, built Aug 15 2026, NOT yet generated)
+- paralation-4-exterior (6 house fronts + car, mailbox, lamp, hoop) and paralation-5-yard (tree, bush, hedge, fence, trash, boxes, weightBench, weights, workbench). Both installed in the Comfy Desktop sidebar. Everything they cover is currently placeholder code art.
+- make_workflows.py gained two things. Items are now (name, text, view[, latent]) where view is 'front' | 'top' | 'ext'; the old boolean topdown flag is gone. And latent shape varies per item, so the generator emits one EmptySD3LatentImage per distinct shape and wires each chain to the right one. Houses 1216x896, tall props 832x1216, everything else 1024x1024.
+- Verified after the refactor that workflows 1 to 3 still produce byte-identical prompts, save prefixes and latent sizes, so the existing 30 sprites remain reproducible. Re-check that if make_workflows.py changes again.
+- The 'ext' view says "no ground or grass beneath it". Without it Z Image paints a lawn and driveway into the sprite and the importer cannot separate them from the house.
+- HOUSES WILL LIKELY BE CHUNKY. Measured (see below): Z Image draws only ~32-60 truly independent pixels per frame regardless of frame size, and a house sprite is 512x384. Judge the first batch before queueing hundreds; if it reads too blocky the fix is prompt-side, not importer-side.
+
+### How much detail the raws actually carry (measured Aug 15 2026)
+- Tim asked whether upping assets to 64px per tile would help. It would not, and this is the evidence.
+- The 1024x1024 raws are pixel art drawn in chunky blocks. Measuring where colour changes land gives a block size of 17-32px, so a raw carries only about 32-60 genuinely independent pixels across the whole frame.
+- Against that, current import targets are ALREADY oversampled 1.3x to 4.5x (bed: 16 real pixels rendered at 64 wide; desk: 21 at 96). Doubling the target would interpolate the same blocks twice as wide for zero new detail.
+- The bottleneck is generation, not import. More detail needs prompt or model changes, not a bigger SIZES table.
+- Separately: raising the CANVAS resolution would sharpen the code-drawn art and HUD text on large displays, but the cul-de-sac's pre-baked background would go from 3072x3840 (47MB) to 6144x7680 (189MB), which is fine on desktop and likely fatal on mobile Safari. Different change, different tradeoff.
+
 ### Feedback (added when the game went public)
 - index.html has a small HTML bar under the canvas linking to two GitHub issue forms. It is deliberately outside the canvas so it can never steal a keypress from the game.
 - Templates live in .github/ISSUE_TEMPLATE/ (bug_report.yml, feature_request.yml) and auto-apply the `bug` and `enhancement` labels. The bug form asks which floor the player was on, because "it broke" without a location is unactionable.
@@ -85,7 +99,7 @@ Paralation: a play on parasite and collaboration. Top down gameplay and art in t
 - images/: hi-res (32px per tile) PNG sprite overrides, produced by the importer. Each is exactly 2x its code sprite's size.
 - images-v1-backup/: the v0.3 first-draft sprites, kept for rollback. Not loaded by the game. Copy a file back into images/ to revert one piece.
 - .claude/launch.json: launch config named "paralation" so preview_start boots dev-server.js on port 8321.
-- comfy/: ComfyUI generation kit. make_workflows.py (source of truth, generates and installs the three batch workflows), paralation-*-*.json (UI format) and .api.json (for API queueing), import_asset.py (raw output to game sprite), PROMPTS.md (how to run, per-item prompts).
+- comfy/: ComfyUI generation kit. make_workflows.py (source of truth, generates and installs the FIVE batch workflows), paralation-*-*.json (UI format) and .api.json (for API queueing), import_asset.py (raw output to game sprite), PROMPTS.md (how to run, per-item prompts). Workflows 4 and 5 cover the exteriors and garage props and have not been generated yet.
 - shots/: screenshot output folder for the dev server, safe to empty.
 - dev-server.js: optional dev tool, not part of the game. `node dev-server.js <gameDir> <shotDir> <port>` serves the game and accepts POST /shot?name=x with a canvas dataURL to save PNG screenshots (used for automated visual testing). Wired into the workspace .claude\launch.json as "paralation".
 

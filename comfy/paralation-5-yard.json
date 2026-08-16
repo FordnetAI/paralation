@@ -1,6 +1,6 @@
 {
- "last_node_id": 69,
- "last_link_id": 83,
+ "last_node_id": 65,
+ "last_link_id": 75,
  "nodes": [
   {
    "id": 1,
@@ -74,8 +74,7 @@
       45,
       53,
       61,
-      69,
-      77
+      69
      ],
      "slot_index": 0
     }
@@ -117,8 +116,7 @@
       44,
       52,
       60,
-      68,
-      76
+      68
      ],
      "slot_index": 0
     }
@@ -157,8 +155,7 @@
       50,
       58,
       66,
-      74,
-      82
+      74
      ],
      "slot_index": 0
     }
@@ -240,8 +237,7 @@
       47,
       55,
       63,
-      71,
-      79
+      71
      ],
      "slot_index": 0
     }
@@ -265,6 +261,39 @@
     "Node name for S&R": "EmptySD3LatentImage"
    },
    "widgets_values": [
+    832,
+    1216,
+    1
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "type": "EmptySD3LatentImage",
+   "pos": [
+    40,
+    720
+   ],
+   "size": [
+    340,
+    106
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "EmptySD3LatentImage"
+   },
+   "widgets_values": [
     1024,
     1024,
     1
@@ -274,7 +303,6 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      8,
       16,
       24,
       32,
@@ -282,8 +310,7 @@
       48,
       56,
       64,
-      72,
-      80
+      72
      ],
      "slot_index": 0
     }
@@ -301,13 +328,13 @@
     170
    ],
    "flags": {},
-   "order": 7,
+   "order": 8,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art teenager's single bed with green blanket and white pillow, wooden headboard, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art large leafy oak tree with a thick brown trunk and full green canopy, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -339,7 +366,7 @@
     262
    ],
    "flags": {},
-   "order": 8,
+   "order": 9,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -398,7 +425,7 @@
     46
    ],
    "flags": {},
-   "order": 9,
+   "order": 10,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -439,13 +466,13 @@
     200
    ],
    "flags": {},
-   "order": 10,
+   "order": 11,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/bed"
+    "paralation/tree"
    ],
    "inputs": [
     {
@@ -467,13 +494,13 @@
     170
    ],
    "flags": {},
-   "order": 11,
+   "order": 12,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art double bed with two pillows and dusty rose blanket, wooden headboard, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art small round green garden shrub, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -505,7 +532,7 @@
     262
    ],
    "flags": {},
-   "order": 12,
+   "order": 13,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -564,7 +591,7 @@
     46
    ],
    "flags": {},
-   "order": 13,
+   "order": 14,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -605,13 +632,13 @@
     200
    ],
    "flags": {},
-   "order": 14,
+   "order": 15,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/bedDouble"
+    "paralation/bush"
    ],
    "inputs": [
     {
@@ -633,13 +660,13 @@
     170
    ],
    "flags": {},
-   "order": 15,
+   "order": 16,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art small wooden nightstand with an orange prescription pill bottle on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art low neatly trimmed green boxwood hedge block, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -671,7 +698,7 @@
     262
    ],
    "flags": {},
-   "order": 16,
+   "order": 17,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -730,7 +757,7 @@
     46
    ],
    "flags": {},
-   "order": 17,
+   "order": 18,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -771,13 +798,13 @@
     200
    ],
    "flags": {},
-   "order": 18,
+   "order": 19,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/nightstand"
+    "paralation/hedge"
    ],
    "inputs": [
     {
@@ -799,13 +826,13 @@
     170
    ],
    "flags": {},
-   "order": 19,
+   "order": 20,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art tall wooden bookshelf full of colorful books and comics, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art short section of white picket fence, four pickets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -837,7 +864,7 @@
     262
    ],
    "flags": {},
-   "order": 20,
+   "order": 21,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -896,7 +923,7 @@
     46
    ],
    "flags": {},
-   "order": 21,
+   "order": 22,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -937,13 +964,13 @@
     200
    ],
    "flags": {},
-   "order": 22,
+   "order": 23,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/bookshelf"
+    "paralation/fence"
    ],
    "inputs": [
     {
@@ -965,13 +992,13 @@
     170
    ],
    "flags": {},
-   "order": 23,
+   "order": 24,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art wooden computer desk with monitor, keyboard, red mug and eyeglasses on it, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art green wheeled garbage bin with a closed lid, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -1003,7 +1030,7 @@
     262
    ],
    "flags": {},
-   "order": 24,
+   "order": 25,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1062,7 +1089,7 @@
     46
    ],
    "flags": {},
-   "order": 25,
+   "order": 26,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1103,13 +1130,13 @@
     200
    ],
    "flags": {},
-   "order": 26,
+   "order": 27,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/desk"
+    "paralation/trash"
    ],
    "inputs": [
     {
@@ -1131,13 +1158,13 @@
     170
    ],
    "flags": {},
-   "order": 27,
+   "order": 28,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art simple wooden chair, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art stack of two brown cardboard moving boxes, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -1169,7 +1196,7 @@
     262
    ],
    "flags": {},
-   "order": 28,
+   "order": 29,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1228,7 +1255,7 @@
     46
    ],
    "flags": {},
-   "order": 29,
+   "order": 30,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1269,13 +1296,13 @@
     200
    ],
    "flags": {},
-   "order": 30,
+   "order": 31,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/chair"
+    "paralation/boxes"
    ],
    "inputs": [
     {
@@ -1297,13 +1324,13 @@
     170
    ],
    "flags": {},
-   "order": 31,
+   "order": 32,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art red school backpack sitting on the floor, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art black padded weight lifting bench with steel legs, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -1335,7 +1362,7 @@
     262
    ],
    "flags": {},
-   "order": 32,
+   "order": 33,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1394,7 +1421,7 @@
     46
    ],
    "flags": {},
-   "order": 33,
+   "order": 34,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1435,13 +1462,13 @@
     200
    ],
    "flags": {},
-   "order": 34,
+   "order": 35,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/backpack"
+    "paralation/weightBench"
    ],
    "inputs": [
     {
@@ -1463,13 +1490,13 @@
     170
    ],
    "flags": {},
-   "order": 35,
+   "order": 36,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art wide low wooden dresser with two drawers and round knobs, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art steel barbell loaded with round black weight plates, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -1501,7 +1528,7 @@
     262
    ],
    "flags": {},
-   "order": 36,
+   "order": 37,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1560,7 +1587,7 @@
     46
    ],
    "flags": {},
-   "order": 37,
+   "order": 38,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1601,13 +1628,13 @@
     200
    ],
    "flags": {},
-   "order": 38,
+   "order": 39,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/dresser"
+    "paralation/weights"
    ],
    "inputs": [
     {
@@ -1629,13 +1656,13 @@
     170
    ],
    "flags": {},
-   "order": 39,
+   "order": 40,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art retro space rocket poster with dark blue background, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "pixel art wooden garage workbench with hand tools scattered on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    ],
    "inputs": [
     {
@@ -1667,7 +1694,7 @@
     262
    ],
    "flags": {},
-   "order": 40,
+   "order": 41,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1726,7 +1753,7 @@
     46
    ],
    "flags": {},
-   "order": 41,
+   "order": 42,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1767,185 +1794,19 @@
     200
    ],
    "flags": {},
-   "order": 42,
+   "order": 43,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/poster"
+    "paralation/workbench"
    ],
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
      "link": 75
-    }
-   ]
-  },
-  {
-   "id": 66,
-   "type": "CLIPTextEncode",
-   "pos": [
-    480,
-    2220
-   ],
-   "size": [
-    430,
-    170
-   ],
-   "flags": {},
-   "order": 43,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "CLIPTextEncode"
-   },
-   "widgets_values": [
-    "pixel art gold framed wall mirror, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   ],
-   "inputs": [
-    {
-     "name": "clip",
-     "type": "CLIP",
-     "link": 76
-    }
-   ],
-   "outputs": [
-    {
-     "name": "CONDITIONING",
-     "type": "CONDITIONING",
-     "links": [
-      78
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 67,
-   "type": "KSampler",
-   "pos": [
-    960,
-    2220
-   ],
-   "size": [
-    315,
-    262
-   ],
-   "flags": {},
-   "order": 44,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "KSampler"
-   },
-   "widgets_values": [
-    123459,
-    "randomize",
-    8,
-    1,
-    "res_multistep",
-    "simple",
-    1
-   ],
-   "inputs": [
-    {
-     "name": "model",
-     "type": "MODEL",
-     "link": 77
-    },
-    {
-     "name": "positive",
-     "type": "CONDITIONING",
-     "link": 78
-    },
-    {
-     "name": "negative",
-     "type": "CONDITIONING",
-     "link": 79
-    },
-    {
-     "name": "latent_image",
-     "type": "LATENT",
-     "link": 80
-    }
-   ],
-   "outputs": [
-    {
-     "name": "LATENT",
-     "type": "LATENT",
-     "links": [
-      81
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 68,
-   "type": "VAEDecode",
-   "pos": [
-    1320,
-    2220
-   ],
-   "size": [
-    210,
-    46
-   ],
-   "flags": {},
-   "order": 45,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "VAEDecode"
-   },
-   "widgets_values": [],
-   "inputs": [
-    {
-     "name": "samples",
-     "type": "LATENT",
-     "link": 81
-    },
-    {
-     "name": "vae",
-     "type": "VAE",
-     "link": 82
-    }
-   ],
-   "outputs": [
-    {
-     "name": "IMAGE",
-     "type": "IMAGE",
-     "links": [
-      83
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 69,
-   "type": "SaveImage",
-   "pos": [
-    1570,
-    2220
-   ],
-   "size": [
-    320,
-    200
-   ],
-   "flags": {},
-   "order": 46,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "SaveImage"
-   },
-   "widgets_values": [
-    "paralation/mirrorW"
-   ],
-   "inputs": [
-    {
-     "name": "images",
-     "type": "IMAGE",
-     "link": 83
     }
    ]
   }
@@ -2073,7 +1934,7 @@
   ],
   [
    16,
-   5,
+   8,
    0,
    35,
    3,
@@ -2137,7 +1998,7 @@
   ],
   [
    24,
-   5,
+   8,
    0,
    39,
    3,
@@ -2201,7 +2062,7 @@
   ],
   [
    32,
-   5,
+   8,
    0,
    43,
    3,
@@ -2265,7 +2126,7 @@
   ],
   [
    40,
-   5,
+   8,
    0,
    47,
    3,
@@ -2329,7 +2190,7 @@
   ],
   [
    48,
-   5,
+   8,
    0,
    51,
    3,
@@ -2393,7 +2254,7 @@
   ],
   [
    56,
-   5,
+   8,
    0,
    55,
    3,
@@ -2457,7 +2318,7 @@
   ],
   [
    64,
-   5,
+   8,
    0,
    59,
    3,
@@ -2521,7 +2382,7 @@
   ],
   [
    72,
-   5,
+   8,
    0,
    63,
    3,
@@ -2548,70 +2409,6 @@
    64,
    0,
    65,
-   0,
-   "IMAGE"
-  ],
-  [
-   76,
-   3,
-   0,
-   66,
-   0,
-   "CLIP"
-  ],
-  [
-   77,
-   2,
-   0,
-   67,
-   0,
-   "MODEL"
-  ],
-  [
-   78,
-   66,
-   0,
-   67,
-   1,
-   "CONDITIONING"
-  ],
-  [
-   79,
-   7,
-   0,
-   67,
-   2,
-   "CONDITIONING"
-  ],
-  [
-   80,
-   5,
-   0,
-   67,
-   3,
-   "LATENT"
-  ],
-  [
-   81,
-   67,
-   0,
-   68,
-   0,
-   "LATENT"
-  ],
-  [
-   82,
-   4,
-   0,
-   68,
-   1,
-   "VAE"
-  ],
-  [
-   83,
-   68,
-   0,
-   69,
    0,
    "IMAGE"
   ]

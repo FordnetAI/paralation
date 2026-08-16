@@ -32,6 +32,14 @@ SIZES = {
     'tableD': (48, 34), 'mat': (32, 12), 'stairsD': (32, 64),
     'stairsU': (32, 64), 'doorF': (32, 26), 'mirrorW': (12, 22),
     'poster': (14, 18), 'windowW': (32, 24), 'photoW': (12, 14),
+    # exteriors and garage props (phase 2). Houses are 16x12 tiles, so their
+    # output is 512x384 -- by far the largest sprites in the game.
+    'houseMatt': (256, 192), 'houseA': (256, 192), 'houseB': (256, 192),
+    'houseC': (256, 192), 'houseD': (256, 192), 'houseOpen': (256, 192),
+    'tree': (48, 76), 'bush': (22, 20), 'hedge': (16, 18), 'mailbox': (14, 26),
+    'fence': (16, 20), 'lamp': (14, 58), 'car': (32, 50), 'trash': (16, 24),
+    'hoop': (22, 62), 'weightBench': (32, 26), 'weights': (26, 16),
+    'workbench': (48, 30), 'boxes': (24, 26),
 }
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')

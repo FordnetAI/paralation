@@ -53,6 +53,14 @@
   "5": {
    "class_type": "EmptySD3LatentImage",
    "inputs": {
+    "width": 832,
+    "height": 1216,
+    "batch_size": 1
+   }
+  },
+  "8": {
+   "class_type": "EmptySD3LatentImage",
+   "inputs": {
     "width": 1024,
     "height": 1024,
     "batch_size": 1
@@ -65,7 +73,7 @@
      "3",
      0
     ],
-    "text": "pixel art warm brown leather couch with two seat cushions and rolled arms, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art large leafy oak tree with a thick brown trunk and full green canopy, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "31": {
@@ -115,7 +123,7 @@
      "32",
      0
     ],
-    "filename_prefix": "paralation/couch"
+    "filename_prefix": "paralation/tree"
    }
   },
   "34": {
@@ -125,7 +133,7 @@
      "3",
      0
     ],
-    "text": "pixel art low wooden TV stand with a flat screen television on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art small round green garden shrub, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "35": {
@@ -144,7 +152,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987651,
@@ -175,7 +183,7 @@
      "36",
      0
     ],
-    "filename_prefix": "paralation/tvStand"
+    "filename_prefix": "paralation/bush"
    }
   },
   "38": {
@@ -185,7 +193,7 @@
      "3",
      0
     ],
-    "text": "pixel art low wooden coffee table with a blue puzzle box on it, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art low neatly trimmed green boxwood hedge block, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "39": {
@@ -204,7 +212,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987652,
@@ -235,7 +243,7 @@
      "40",
      0
     ],
-    "filename_prefix": "paralation/coffeeT"
+    "filename_prefix": "paralation/hedge"
    }
   },
   "42": {
@@ -245,7 +253,7 @@
      "3",
      0
     ],
-    "text": "pixel art narrow wooden hall table with a blue flower vase and letters on it, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art short section of white picket fence, four pickets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "43": {
@@ -264,7 +272,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987653,
@@ -295,7 +303,7 @@
      "44",
      0
     ],
-    "filename_prefix": "paralation/hallTable"
+    "filename_prefix": "paralation/fence"
    }
   },
   "46": {
@@ -305,7 +313,7 @@
      "3",
      0
     ],
-    "text": "pixel art monstera houseplant in a terracotta pot, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art green wheeled garbage bin with a closed lid, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "47": {
@@ -324,7 +332,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987654,
@@ -355,7 +363,7 @@
      "48",
      0
     ],
-    "filename_prefix": "paralation/plant"
+    "filename_prefix": "paralation/trash"
    }
   },
   "50": {
@@ -365,7 +373,7 @@
      "3",
      0
     ],
-    "text": "pixel art wooden dining table with a fruit bowl in the center, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art stack of two brown cardboard moving boxes, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "51": {
@@ -384,7 +392,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987655,
@@ -415,7 +423,7 @@
      "52",
      0
     ],
-    "filename_prefix": "paralation/tableD"
+    "filename_prefix": "paralation/boxes"
    }
   },
   "54": {
@@ -425,7 +433,7 @@
      "3",
      0
     ],
-    "text": "pixel art small framed photo of a family at the beach, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art black padded weight lifting bench with steel legs, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "55": {
@@ -444,7 +452,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987656,
@@ -475,7 +483,7 @@
      "56",
      0
     ],
-    "filename_prefix": "paralation/photoW"
+    "filename_prefix": "paralation/weightBench"
    }
   },
   "58": {
@@ -485,7 +493,7 @@
      "3",
      0
     ],
-    "text": "pixel art wooden four-panel front door with brass knob, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art steel barbell loaded with round black weight plates, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "59": {
@@ -504,7 +512,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987657,
@@ -535,7 +543,7 @@
      "60",
      0
     ],
-    "filename_prefix": "paralation/doorF"
+    "filename_prefix": "paralation/weights"
    }
   },
   "62": {
@@ -545,7 +553,7 @@
      "3",
      0
     ],
-    "text": "pixel art white framed window showing blue sky and clouds, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art wooden garage workbench with hand tools scattered on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "63": {
@@ -564,7 +572,7 @@
      0
     ],
     "latent_image": [
-     "5",
+     "8",
      0
     ],
     "seed": 987658,
@@ -595,67 +603,7 @@
      "64",
      0
     ],
-    "filename_prefix": "paralation/windowW"
-   }
-  },
-  "66": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art rectangular navy blue and cream braided area rug with a simple border pattern, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "67": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "66",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987659,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "68": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "67",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "69": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "68",
-     0
-    ],
-    "filename_prefix": "paralation/rug"
+    "filename_prefix": "paralation/workbench"
    }
   }
  }

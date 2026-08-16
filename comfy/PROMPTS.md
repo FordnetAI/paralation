@@ -34,6 +34,20 @@ Notes: there is no pixel art LoRA on the new Comfy Desktop install (the old E:\C
 
 NEVER NAME A PINK, SALMON OR MAGENTA OBJECT. Z Image renders the "plain magenta background" as pink no matter what, and the importer separates the object from the background by color, so a pink object dissolves into the background. The rug wasted 19 candidates on "salmon pink area rug" before being changed to navy and cream. If an object genuinely should be pink in the game, generate it in another color and recolor it by hand.
 
+## Exteriors (workflows 4 and 5, added Aug 15 2026)
+
+Two more batch workflows cover everything outside the house plus the neighbour's garage, which are all still placeholder code art:
+
+- **paralation-4-exterior**: the six house fronts, plus car, mailbox, lamp, hoop.
+- **paralation-5-yard**: tree, bush, hedge, fence, trash, boxes, weightBench, weights, workbench.
+
+Two things differ from workflows 1 to 3:
+
+1. **Buildings use their own view text.** Instead of the furniture "front view ... like Stardew Valley interior furniture", houses say "front elevation view of the whole building, roof above the front wall, flat 2D, no perspective, no ground or grass beneath it". Without that last clause Z Image paints a lawn and a driveway into the sprite, which the importer cannot separate from the house.
+2. **Latent shape now varies per item.** A house is drawn 4:3 and a lamp post is drawn tall, so a square 1024 frame threw away a quarter of the pixels on one and more than half on the other. Houses generate at 1216x896, tall props at 832x1216, everything else stays 1024x1024. The generator makes one latent node per distinct shape and shares it.
+
+**Expect the houses to come out chunky.** Measured on the existing raws, Z Image draws roughly 32 to 60 genuinely independent pixels across a frame no matter how big that frame is. A house sprite is 512x384, so it will be far more oversampled than the furniture was. If they read too blocky next to the furniture, that is a prompt problem (push for finer pixel detail), not an importer setting. Judge the first batch before queueing hundreds.
+
 ## Shot list
 
 Prefix each with `pixel art `, then the style lock above.

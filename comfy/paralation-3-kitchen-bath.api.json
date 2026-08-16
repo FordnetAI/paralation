@@ -31,14 +31,6 @@
     "vae_name": "z_image_ae.safetensors"
    }
   },
-  "5": {
-   "class_type": "EmptySD3LatentImage",
-   "inputs": {
-    "width": 1024,
-    "height": 1024,
-    "batch_size": 1
-   }
-  },
   "6": {
    "class_type": "CLIPTextEncode",
    "inputs": {
@@ -58,304 +50,12 @@
     ]
    }
   },
-  "10": {
-   "class_type": "CLIPTextEncode",
+  "5": {
+   "class_type": "EmptySD3LatentImage",
    "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art kitchen base cabinet with light stone countertop, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "11": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "10",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987650,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "12": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "11",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "13": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "12",
-     0
-    ],
-    "filename_prefix": "paralation/counter"
-   }
-  },
-  "14": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art kitchen counter with steel sink basin and faucet, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "15": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "14",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987651,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "16": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "15",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "17": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "16",
-     0
-    ],
-    "filename_prefix": "paralation/counterSink"
-   }
-  },
-  "18": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art kitchen counter with a small handwritten note lying on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "19": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "18",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987652,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "20": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "19",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "21": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "20",
-     0
-    ],
-    "filename_prefix": "paralation/counterNote"
-   }
-  },
-  "22": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art white kitchen stove with black burners and oven window, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "23": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "22",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987653,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "24": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "23",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "25": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "24",
-     0
-    ],
-    "filename_prefix": "paralation/stove"
-   }
-  },
-  "26": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art white refrigerator with door handles and fridge magnets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "27": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "26",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987654,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "28": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "27",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "29": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "28",
-     0
-    ],
-    "filename_prefix": "paralation/fridge"
+    "width": 1024,
+    "height": 1024,
+    "batch_size": 1
    }
   },
   "30": {
@@ -365,7 +65,7 @@
      "3",
      0
     ],
-    "text": "pixel art white porcelain toilet with tank, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art kitchen base cabinet with light stone countertop, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "31": {
@@ -387,7 +87,7 @@
      "5",
      0
     ],
-    "seed": 987655,
+    "seed": 987650,
     "steps": 8,
     "cfg": 1,
     "sampler_name": "res_multistep",
@@ -415,7 +115,7 @@
      "32",
      0
     ],
-    "filename_prefix": "paralation/toilet"
+    "filename_prefix": "paralation/counter"
    }
   },
   "34": {
@@ -425,7 +125,7 @@
      "3",
      0
     ],
-    "text": "pixel art white pedestal bathroom sink, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art kitchen counter with steel sink basin and faucet, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "35": {
@@ -447,7 +147,7 @@
      "5",
      0
     ],
-    "seed": 987656,
+    "seed": 987651,
     "steps": 8,
     "cfg": 1,
     "sampler_name": "res_multistep",
@@ -475,7 +175,7 @@
      "36",
      0
     ],
-    "filename_prefix": "paralation/sinkP"
+    "filename_prefix": "paralation/counterSink"
    }
   },
   "38": {
@@ -485,7 +185,7 @@
      "3",
      0
     ],
-    "text": "pixel art white bathtub filled with blue water, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art kitchen counter with a small handwritten note lying on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "39": {
@@ -507,7 +207,7 @@
      "5",
      0
     ],
-    "seed": 987657,
+    "seed": 987652,
     "steps": 8,
     "cfg": 1,
     "sampler_name": "res_multistep",
@@ -535,7 +235,7 @@
      "40",
      0
     ],
-    "filename_prefix": "paralation/tub"
+    "filename_prefix": "paralation/counterNote"
    }
   },
   "42": {
@@ -545,7 +245,7 @@
      "3",
      0
     ],
-    "text": "pixel art large area rug, cream center with burgundy border pattern, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art white kitchen stove with black burners and oven window, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "43": {
@@ -567,7 +267,7 @@
      "5",
      0
     ],
-    "seed": 987658,
+    "seed": 987653,
     "steps": 8,
     "cfg": 1,
     "sampler_name": "res_multistep",
@@ -595,7 +295,7 @@
      "44",
      0
     ],
-    "filename_prefix": "paralation/rug2"
+    "filename_prefix": "paralation/stove"
    }
   },
   "46": {
@@ -605,7 +305,7 @@
      "3",
      0
     ],
-    "text": "pixel art small brown rectangular doormat with woven texture, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "pixel art white refrigerator with door handles and fridge magnets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
    }
   },
   "47": {
@@ -627,7 +327,7 @@
      "5",
      0
     ],
-    "seed": 987659,
+    "seed": 987654,
     "steps": 8,
     "cfg": 1,
     "sampler_name": "res_multistep",
@@ -653,6 +353,306 @@
    "inputs": {
     "images": [
      "48",
+     0
+    ],
+    "filename_prefix": "paralation/fridge"
+   }
+  },
+  "50": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "3",
+     0
+    ],
+    "text": "pixel art white porcelain toilet with tank, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+   }
+  },
+  "51": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "50",
+     0
+    ],
+    "negative": [
+     "7",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987655,
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "52": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "51",
+     0
+    ],
+    "vae": [
+     "4",
+     0
+    ]
+   }
+  },
+  "53": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "52",
+     0
+    ],
+    "filename_prefix": "paralation/toilet"
+   }
+  },
+  "54": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "3",
+     0
+    ],
+    "text": "pixel art white pedestal bathroom sink, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+   }
+  },
+  "55": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "54",
+     0
+    ],
+    "negative": [
+     "7",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987656,
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "56": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "55",
+     0
+    ],
+    "vae": [
+     "4",
+     0
+    ]
+   }
+  },
+  "57": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "56",
+     0
+    ],
+    "filename_prefix": "paralation/sinkP"
+   }
+  },
+  "58": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "3",
+     0
+    ],
+    "text": "pixel art white bathtub filled with blue water, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+   }
+  },
+  "59": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "58",
+     0
+    ],
+    "negative": [
+     "7",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987657,
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "60": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "59",
+     0
+    ],
+    "vae": [
+     "4",
+     0
+    ]
+   }
+  },
+  "61": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "60",
+     0
+    ],
+    "filename_prefix": "paralation/tub"
+   }
+  },
+  "62": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "3",
+     0
+    ],
+    "text": "pixel art large area rug, cream center with burgundy border pattern, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+   }
+  },
+  "63": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "62",
+     0
+    ],
+    "negative": [
+     "7",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987658,
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "64": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "63",
+     0
+    ],
+    "vae": [
+     "4",
+     0
+    ]
+   }
+  },
+  "65": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "64",
+     0
+    ],
+    "filename_prefix": "paralation/rug2"
+   }
+  },
+  "66": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "3",
+     0
+    ],
+    "text": "pixel art small brown rectangular doormat with woven texture, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+   }
+  },
+  "67": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "66",
+     0
+    ],
+    "negative": [
+     "7",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987659,
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "68": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "67",
+     0
+    ],
+    "vae": [
+     "4",
+     0
+    ]
+   }
+  },
+  "69": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "68",
      0
     ],
     "filename_prefix": "paralation/mat"
