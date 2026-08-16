@@ -75,6 +75,16 @@ MIN_ISLAND = 250
 # pink rug), so only small components touching transparency are removed.
 FRINGE_B_MINUS_G = 8
 MAX_FRINGE_COMP = 800
+# Comic outline: every sprite gets a uniform near-black contour around its
+# silhouette (Tim's call, Aug 16 2026: full asset separation from any ground).
+# 2px at sprite scale = 1 logical pixel on screen, the code art's line weight.
+# The fit leaves this much margin so the contour grows OUTWARD; an inward line
+# would swallow thin chair legs. The contour is dilated with a CROSS kernel
+# (diamond growth, 45-degree chamfered corners) after a notch/nub smoothing
+# pass -- a square kernel on a raw staircase silhouette reads as jagged, which
+# was Tim's actual complaint when the first outlined build looked wrong.
+OUTLINE = 2
+OUTLINE_RGBA = (14, 11, 18, 255)
 # Distance from the FITTED local background, not from a corner sample. Chosen by
 # sweeping: a real pocket IS the backdrop so it sits near zero, while the
 # parents' dusty-pink bedding first gets nibbled at 28 and is destroyed at 34.
@@ -211,7 +221,7 @@ def _bg_surface(a, cleared=None):
     return out
 
 
-def pixelize(im, name):
+def pixelize(im, name, outline=OUTLINE):
     lw, lh = SIZES[name]
     tw, th = lw * 2, lh * 2
     bbox = im.getbbox()
@@ -219,7 +229,8 @@ def pixelize(im, name):
         raise ValueError('image is empty after background removal')
     im = im.crop(bbox)
     cw, ch = im.size
-    f = min(tw / cw, th / ch)
+    # leave room for the outward comic outline on all four sides
+    f = min((tw - 2 * outline) / cw, (th - 2 * outline) / ch)
     nw, nh = max(1, round(cw * f)), max(1, round(ch * f))
 
     # Alpha-weighted (premultiplied) downscale. key_background zeroes alpha but
@@ -246,9 +257,45 @@ def pixelize(im, name):
     out = Image.new('RGBA', (tw, th), (0, 0, 0, 0))
     sprite = rgb.convert('RGBA')
     sprite.putalpha(alpha)
-    # furniture sits on the floor: anchor bottom-center
-    out.paste(sprite, ((tw - nw) // 2, th - nh), sprite)
+    # furniture sits on the floor: anchor bottom-center, above the outline gap
+    out.paste(sprite, ((tw - nw) // 2, th - nh - outline), sprite)
+    if outline > 0:
+        arr = np.asarray(out).copy()
+        arr = _smooth_silhouette(arr)
+        # comic contour: dilate the silhouette outward into near-black with a
+        # CROSS kernel. Diamond growth chamfers diagonal steps to 45 degrees;
+        # a square kernel grows a blocky knob at every step and reads jagged.
+        cross = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], bool)
+        op = arr[:, :, 3] > 0
+        ring = ndimage.binary_dilation(op, structure=cross, iterations=outline) & ~op
+        arr[ring] = OUTLINE_RGBA
+        out = Image.fromarray(arr)
     return out
+
+
+def _smooth_silhouette(arr):
+    """De-jag the sprite's edge before outlining: fill transparent one-pixel
+    notches (3+ opaque orthogonal neighbours, coloured from their average) and
+    shave opaque one-pixel nubs (at most 1 opaque orthogonal neighbour). Two
+    gentle passes; 2px-wide features like chair legs are untouched because
+    every pixel in them keeps 2 neighbours."""
+    k = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], float)
+    for _ in range(2):
+        op = arr[:, :, 3] > 0
+        n4 = ndimage.convolve(op.astype(float), k, mode='constant')
+        nub = op & (n4 <= 1)
+        notch = ~op & (n4 >= 3)
+        if not nub.any() and not notch.any():
+            break
+        if notch.any():
+            opf = op.astype(float)
+            for c in range(3):
+                s = ndimage.convolve(arr[:, :, c] * opf, k, mode='constant')
+                arr[:, :, c][notch] = (s[notch] / n4[notch]).astype(arr.dtype)
+            arr[:, :, 3][notch] = 255
+        if nub.any():
+            arr[:, :, 3][nub] = 0
+    return arr
 
 
 def import_one(path, name):
