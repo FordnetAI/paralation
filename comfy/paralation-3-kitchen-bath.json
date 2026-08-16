@@ -1,27 +1,26 @@
 {
- "last_node_id": 69,
- "last_link_id": 83,
+ "last_node_id": 79,
+ "last_link_id": 92,
  "nodes": [
   {
    "id": 1,
-   "type": "UNETLoader",
+   "type": "CheckpointLoaderSimple",
    "pos": [
     40,
     80
    ],
    "size": [
     340,
-    82
+    100
    ],
    "flags": {},
    "order": 0,
    "mode": 0,
    "properties": {
-    "Node name for S&R": "UNETLoader"
+    "Node name for S&R": "CheckpointLoaderSimple"
    },
    "widgets_values": [
-    "z_image_turbo_bf16.safetensors",
-    "default"
+    "flux1-dev-fp8.safetensors"
    ],
    "outputs": [
     {
@@ -31,160 +30,62 @@
       1
      ],
      "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2
+     ],
+     "slot_index": 1
+    },
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      10,
+      19,
+      28,
+      37,
+      46,
+      55,
+      64,
+      73,
+      82,
+      91
+     ],
+     "slot_index": 2
     }
    ]
   },
   {
    "id": 2,
-   "type": "ModelSamplingAuraFlow",
+   "type": "LoraLoader",
    "pos": [
     40,
-    210
+    240
    ],
    "size": [
     340,
-    58
+    126
    ],
    "flags": {},
    "order": 1,
    "mode": 0,
    "properties": {
-    "Node name for S&R": "ModelSamplingAuraFlow"
+    "Node name for S&R": "LoraLoader"
    },
    "widgets_values": [
-    3
+    "Ghibli_style_flux.safetensors",
+    0.95,
+    0.95
    ],
    "inputs": [
     {
      "name": "model",
      "type": "MODEL",
      "link": 1
-    }
-   ],
-   "outputs": [
-    {
-     "name": "MODEL",
-     "type": "MODEL",
-     "links": [
-      5,
-      13,
-      21,
-      29,
-      37,
-      45,
-      53,
-      61,
-      69,
-      77
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 3,
-   "type": "CLIPLoader",
-   "pos": [
-    40,
-    320
-   ],
-   "size": [
-    340,
-    106
-   ],
-   "flags": {},
-   "order": 2,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "CLIPLoader"
-   },
-   "widgets_values": [
-    "qwen_3_4b_fp8_mixed.safetensors",
-    "lumina2",
-    "default"
-   ],
-   "outputs": [
-    {
-     "name": "CLIP",
-     "type": "CLIP",
-     "links": [
-      2,
-      4,
-      12,
-      20,
-      28,
-      36,
-      44,
-      52,
-      60,
-      68,
-      76
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 4,
-   "type": "VAELoader",
-   "pos": [
-    40,
-    480
-   ],
-   "size": [
-    340,
-    58
-   ],
-   "flags": {},
-   "order": 3,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "VAELoader"
-   },
-   "widgets_values": [
-    "z_image_ae.safetensors"
-   ],
-   "outputs": [
-    {
-     "name": "VAE",
-     "type": "VAE",
-     "links": [
-      10,
-      18,
-      26,
-      34,
-      42,
-      50,
-      58,
-      66,
-      74,
-      82
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 6,
-   "type": "CLIPTextEncode",
-   "pos": [
-    40,
-    750
-   ],
-   "size": [
-    340,
-    96
-   ],
-   "flags": {},
-   "order": 4,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "CLIPTextEncode"
-   },
-   "widgets_values": [
-    ""
-   ],
-   "inputs": [
+    },
     {
      "name": "clip",
      "type": "CLIP",
@@ -193,57 +94,38 @@
    ],
    "outputs": [
     {
-     "name": "CONDITIONING",
-     "type": "CONDITIONING",
+     "name": "MODEL",
+     "type": "MODEL",
      "links": [
-      3
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 7,
-   "type": "ConditioningZeroOut",
-   "pos": [
-    40,
-    900
-   ],
-   "size": [
-    340,
-    46
-   ],
-   "flags": {},
-   "order": 5,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "ConditioningZeroOut"
-   },
-   "widgets_values": [],
-   "inputs": [
-    {
-     "name": "conditioning",
-     "type": "CONDITIONING",
-     "link": 3
-    }
-   ],
-   "outputs": [
-    {
-     "name": "CONDITIONING",
-     "type": "CONDITIONING",
-     "links": [
-      7,
-      15,
+      5,
+      14,
       23,
-      31,
-      39,
-      47,
-      55,
-      63,
-      71,
-      79
+      32,
+      41,
+      50,
+      59,
+      68,
+      77,
+      86
      ],
      "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      3,
+      12,
+      21,
+      30,
+      39,
+      48,
+      57,
+      66,
+      75,
+      84
+     ],
+     "slot_index": 1
     }
    ]
   },
@@ -252,14 +134,14 @@
    "type": "EmptySD3LatentImage",
    "pos": [
     40,
-    590
+    430
    ],
    "size": [
     340,
     106
    ],
    "flags": {},
-   "order": 6,
+   "order": 2,
    "mode": 0,
    "properties": {
     "Node name for S&R": "EmptySD3LatentImage"
@@ -275,15 +157,15 @@
      "type": "LATENT",
      "links": [
       8,
-      16,
-      24,
-      32,
-      40,
-      48,
-      56,
-      64,
-      72,
-      80
+      17,
+      26,
+      35,
+      44,
+      53,
+      62,
+      71,
+      80,
+      89
      ],
      "slot_index": 0
     }
@@ -297,22 +179,60 @@
     60
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 7,
+   "order": 3,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art kitchen base cabinet with light stone countertop, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, kitchen base cabinet with light stone countertop, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      4
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 31,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    60
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
      "link": 4
     }
    ],
@@ -321,17 +241,18 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      6
+      6,
+      7
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 31,
+   "id": 32,
    "type": "KSampler",
    "pos": [
-    960,
+    1160,
     60
    ],
    "size": [
@@ -339,7 +260,7 @@
     262
    ],
    "flags": {},
-   "order": 8,
+   "order": 5,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -347,9 +268,9 @@
    "widgets_values": [
     123450,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -387,10 +308,10 @@
    ]
   },
   {
-   "id": 32,
+   "id": 33,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     60
    ],
    "size": [
@@ -398,7 +319,7 @@
     46
    ],
    "flags": {},
-   "order": 9,
+   "order": 6,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -428,10 +349,10 @@
    ]
   },
   {
-   "id": 33,
+   "id": 34,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     60
    ],
    "size": [
@@ -439,7 +360,7 @@
     200
    ],
    "flags": {},
-   "order": 10,
+   "order": 7,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -456,24 +377,24 @@
    ]
   },
   {
-   "id": 34,
+   "id": 35,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     300
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 11,
+   "order": 8,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art kitchen counter with steel sink basin and faucet, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, kitchen counter with steel sink basin and faucet, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
@@ -487,66 +408,7 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      14
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 35,
-   "type": "KSampler",
-   "pos": [
-    960,
-    300
-   ],
-   "size": [
-    315,
-    262
-   ],
-   "flags": {},
-   "order": 12,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "KSampler"
-   },
-   "widgets_values": [
-    123451,
-    "randomize",
-    8,
-    1,
-    "res_multistep",
-    "simple",
-    1
-   ],
-   "inputs": [
-    {
-     "name": "model",
-     "type": "MODEL",
-     "link": 13
-    },
-    {
-     "name": "positive",
-     "type": "CONDITIONING",
-     "link": 14
-    },
-    {
-     "name": "negative",
-     "type": "CONDITIONING",
-     "link": 15
-    },
-    {
-     "name": "latent_image",
-     "type": "LATENT",
-     "link": 16
-    }
-   ],
-   "outputs": [
-    {
-     "name": "LATENT",
-     "type": "LATENT",
-     "links": [
-      17
+      13
      ],
      "slot_index": 0
     }
@@ -554,9 +416,107 @@
   },
   {
    "id": 36,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    300
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      15,
+      16
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    300
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123451,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 14
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 15
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 16
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      18
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 38,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     300
    ],
    "size": [
@@ -564,7 +524,7 @@
     46
    ],
    "flags": {},
-   "order": 13,
+   "order": 11,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -574,12 +534,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 17
+     "link": 18
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 18
+     "link": 19
     }
    ],
    "outputs": [
@@ -587,17 +547,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      19
+      20
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 37,
+   "id": 39,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     300
    ],
    "size": [
@@ -605,7 +565,7 @@
     200
    ],
    "flags": {},
-   "order": 14,
+   "order": 12,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -617,35 +577,35 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 19
+     "link": 20
     }
    ]
   },
   {
-   "id": 38,
+   "id": 40,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     540
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 15,
+   "order": 13,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art kitchen counter with a small handwritten note lying on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, kitchen counter with a small handwritten note lying on top, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 20
+     "link": 21
     }
    ],
    "outputs": [
@@ -660,58 +620,38 @@
    ]
   },
   {
-   "id": 39,
-   "type": "KSampler",
+   "id": 41,
+   "type": "FluxGuidance",
    "pos": [
-    960,
+    910,
     540
    ],
    "size": [
-    315,
-    262
+    220,
+    60
    ],
    "flags": {},
-   "order": 16,
+   "order": 14,
    "mode": 0,
    "properties": {
-    "Node name for S&R": "KSampler"
+    "Node name for S&R": "FluxGuidance"
    },
    "widgets_values": [
-    123452,
-    "randomize",
-    8,
-    1,
-    "res_multistep",
-    "simple",
-    1
+    3.5
    ],
    "inputs": [
     {
-     "name": "model",
-     "type": "MODEL",
-     "link": 21
-    },
-    {
-     "name": "positive",
+     "name": "conditioning",
      "type": "CONDITIONING",
      "link": 22
-    },
-    {
-     "name": "negative",
-     "type": "CONDITIONING",
-     "link": 23
-    },
-    {
-     "name": "latent_image",
-     "type": "LATENT",
-     "link": 24
     }
    ],
    "outputs": [
     {
-     "name": "LATENT",
-     "type": "LATENT",
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
      "links": [
+      24,
       25
      ],
      "slot_index": 0
@@ -719,10 +659,69 @@
    ]
   },
   {
-   "id": 40,
+   "id": 42,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    540
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123452,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 23
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 24
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 25
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 26
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      27
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 43,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     540
    ],
    "size": [
@@ -730,7 +729,7 @@
     46
    ],
    "flags": {},
-   "order": 17,
+   "order": 16,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -740,12 +739,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 25
+     "link": 27
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 26
+     "link": 28
     }
    ],
    "outputs": [
@@ -753,17 +752,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      27
+      29
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 41,
+   "id": 44,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     540
    ],
    "size": [
@@ -771,7 +770,7 @@
     200
    ],
    "flags": {},
-   "order": 18,
+   "order": 17,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -783,35 +782,35 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 27
+     "link": 29
     }
    ]
   },
   {
-   "id": 42,
+   "id": 45,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     780
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 19,
+   "order": 18,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art white kitchen stove with black burners and oven window, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, white kitchen stove with black burners and oven window, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 28
+     "link": 30
     }
    ],
    "outputs": [
@@ -819,17 +818,56 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      30
+      31
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 43,
+   "id": 46,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    780
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 31
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      33,
+      34
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 47,
    "type": "KSampler",
    "pos": [
-    960,
+    1160,
     780
    ],
    "size": [
@@ -845,9 +883,9 @@
    "widgets_values": [
     123453,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -855,22 +893,22 @@
     {
      "name": "model",
      "type": "MODEL",
-     "link": 29
+     "link": 32
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 30
+     "link": 33
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 31
+     "link": 34
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 32
+     "link": 35
     }
    ],
    "outputs": [
@@ -878,17 +916,17 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      33
+      36
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 44,
+   "id": 48,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     780
    ],
    "size": [
@@ -906,12 +944,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 33
+     "link": 36
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 34
+     "link": 37
     }
    ],
    "outputs": [
@@ -919,17 +957,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      35
+      38
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 45,
+   "id": 49,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     780
    ],
    "size": [
@@ -949,19 +987,19 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 35
+     "link": 38
     }
    ]
   },
   {
-   "id": 46,
+   "id": 50,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     1020
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
@@ -971,13 +1009,13 @@
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art white refrigerator with door handles and fridge magnets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, white refrigerator with door handles and fridge magnets, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 36
+     "link": 39
     }
    ],
    "outputs": [
@@ -985,17 +1023,56 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      38
+      40
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 47,
+   "id": 51,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1020
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 24,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 40
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      42,
+      43
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 52,
    "type": "KSampler",
    "pos": [
-    960,
+    1160,
     1020
    ],
    "size": [
@@ -1003,7 +1080,7 @@
     262
    ],
    "flags": {},
-   "order": 24,
+   "order": 25,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1011,9 +1088,9 @@
    "widgets_values": [
     123454,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -1021,22 +1098,22 @@
     {
      "name": "model",
      "type": "MODEL",
-     "link": 37
+     "link": 41
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 38
+     "link": 42
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 39
+     "link": 43
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 40
+     "link": 44
     }
    ],
    "outputs": [
@@ -1044,17 +1121,17 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      41
+      45
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 48,
+   "id": 53,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     1020
    ],
    "size": [
@@ -1062,7 +1139,7 @@
     46
    ],
    "flags": {},
-   "order": 25,
+   "order": 26,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1072,12 +1149,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 41
+     "link": 45
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 42
+     "link": 46
     }
    ],
    "outputs": [
@@ -1085,17 +1162,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      43
+      47
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 49,
+   "id": 54,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     1020
    ],
    "size": [
@@ -1103,7 +1180,7 @@
     200
    ],
    "flags": {},
-   "order": 26,
+   "order": 27,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -1115,100 +1192,41 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 43
+     "link": 47
     }
    ]
   },
   {
-   "id": 50,
+   "id": 55,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     1260
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 27,
+   "order": 28,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art white porcelain toilet with tank, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, white porcelain toilet with tank, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 44
+     "link": 48
     }
    ],
    "outputs": [
     {
      "name": "CONDITIONING",
      "type": "CONDITIONING",
-     "links": [
-      46
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 51,
-   "type": "KSampler",
-   "pos": [
-    960,
-    1260
-   ],
-   "size": [
-    315,
-    262
-   ],
-   "flags": {},
-   "order": 28,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "KSampler"
-   },
-   "widgets_values": [
-    123455,
-    "randomize",
-    8,
-    1,
-    "res_multistep",
-    "simple",
-    1
-   ],
-   "inputs": [
-    {
-     "name": "model",
-     "type": "MODEL",
-     "link": 45
-    },
-    {
-     "name": "positive",
-     "type": "CONDITIONING",
-     "link": 46
-    },
-    {
-     "name": "negative",
-     "type": "CONDITIONING",
-     "link": 47
-    },
-    {
-     "name": "latent_image",
-     "type": "LATENT",
-     "link": 48
-    }
-   ],
-   "outputs": [
-    {
-     "name": "LATENT",
-     "type": "LATENT",
      "links": [
       49
      ],
@@ -1217,10 +1235,108 @@
    ]
   },
   {
-   "id": 52,
+   "id": 56,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1260
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 29,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 49
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      51,
+      52
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 57,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    1260
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 30,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123455,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 50
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 51
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 52
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 53
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      54
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 58,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     1260
    ],
    "size": [
@@ -1228,7 +1344,7 @@
     46
    ],
    "flags": {},
-   "order": 29,
+   "order": 31,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1238,12 +1354,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 49
+     "link": 54
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 50
+     "link": 55
     }
    ],
    "outputs": [
@@ -1251,17 +1367,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      51
+      56
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 53,
+   "id": 59,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     1260
    ],
    "size": [
@@ -1269,7 +1385,7 @@
     200
    ],
    "flags": {},
-   "order": 30,
+   "order": 32,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -1281,35 +1397,35 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 51
+     "link": 56
     }
    ]
   },
   {
-   "id": 54,
+   "id": 60,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     1500
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 31,
+   "order": 33,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art white pedestal bathroom sink, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, white pedestal bathroom sink, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 52
+     "link": 57
     }
    ],
    "outputs": [
@@ -1317,17 +1433,56 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      54
+      58
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 55,
+   "id": 61,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1500
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 34,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 58
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      60,
+      61
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 62,
    "type": "KSampler",
    "pos": [
-    960,
+    1160,
     1500
    ],
    "size": [
@@ -1335,7 +1490,7 @@
     262
    ],
    "flags": {},
-   "order": 32,
+   "order": 35,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
@@ -1343,9 +1498,9 @@
    "widgets_values": [
     123456,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -1353,22 +1508,22 @@
     {
      "name": "model",
      "type": "MODEL",
-     "link": 53
+     "link": 59
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 54
+     "link": 60
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 55
+     "link": 61
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 56
+     "link": 62
     }
    ],
    "outputs": [
@@ -1376,17 +1531,17 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      57
+      63
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 56,
+   "id": 63,
    "type": "VAEDecode",
    "pos": [
-    1320,
+    1510,
     1500
    ],
    "size": [
@@ -1394,7 +1549,7 @@
     46
    ],
    "flags": {},
-   "order": 33,
+   "order": 36,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1404,12 +1559,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 57
+     "link": 63
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 58
+     "link": 64
     }
    ],
    "outputs": [
@@ -1417,17 +1572,17 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      59
+      65
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 57,
+   "id": 64,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
     1500
    ],
    "size": [
@@ -1435,7 +1590,7 @@
     200
    ],
    "flags": {},
-   "order": 34,
+   "order": 37,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -1447,141 +1602,41 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 59
+     "link": 65
     }
    ]
   },
   {
-   "id": 58,
+   "id": 65,
    "type": "CLIPTextEncode",
    "pos": [
     480,
     1740
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
-   "order": 35,
+   "order": 38,
    "mode": 0,
    "properties": {
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art white bathtub filled with blue water, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, white bathtub filled with blue water, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 60
+     "link": 66
     }
    ],
    "outputs": [
     {
      "name": "CONDITIONING",
      "type": "CONDITIONING",
-     "links": [
-      62
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 59,
-   "type": "KSampler",
-   "pos": [
-    960,
-    1740
-   ],
-   "size": [
-    315,
-    262
-   ],
-   "flags": {},
-   "order": 36,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "KSampler"
-   },
-   "widgets_values": [
-    123457,
-    "randomize",
-    8,
-    1,
-    "res_multistep",
-    "simple",
-    1
-   ],
-   "inputs": [
-    {
-     "name": "model",
-     "type": "MODEL",
-     "link": 61
-    },
-    {
-     "name": "positive",
-     "type": "CONDITIONING",
-     "link": 62
-    },
-    {
-     "name": "negative",
-     "type": "CONDITIONING",
-     "link": 63
-    },
-    {
-     "name": "latent_image",
-     "type": "LATENT",
-     "link": 64
-    }
-   ],
-   "outputs": [
-    {
-     "name": "LATENT",
-     "type": "LATENT",
-     "links": [
-      65
-     ],
-     "slot_index": 0
-    }
-   ]
-  },
-  {
-   "id": 60,
-   "type": "VAEDecode",
-   "pos": [
-    1320,
-    1740
-   ],
-   "size": [
-    210,
-    46
-   ],
-   "flags": {},
-   "order": 37,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "VAEDecode"
-   },
-   "widgets_values": [],
-   "inputs": [
-    {
-     "name": "samples",
-     "type": "LATENT",
-     "link": 65
-    },
-    {
-     "name": "vae",
-     "type": "VAE",
-     "link": 66
-    }
-   ],
-   "outputs": [
-    {
-     "name": "IMAGE",
-     "type": "IMAGE",
      "links": [
       67
      ],
@@ -1590,58 +1645,30 @@
    ]
   },
   {
-   "id": 61,
-   "type": "SaveImage",
+   "id": 66,
+   "type": "FluxGuidance",
    "pos": [
-    1570,
+    910,
     1740
    ],
    "size": [
-    320,
-    200
-   ],
-   "flags": {},
-   "order": 38,
-   "mode": 0,
-   "properties": {
-    "Node name for S&R": "SaveImage"
-   },
-   "widgets_values": [
-    "paralation/tub"
-   ],
-   "inputs": [
-    {
-     "name": "images",
-     "type": "IMAGE",
-     "link": 67
-    }
-   ]
-  },
-  {
-   "id": 62,
-   "type": "CLIPTextEncode",
-   "pos": [
-    480,
-    1980
-   ],
-   "size": [
-    430,
-    170
+    220,
+    60
    ],
    "flags": {},
    "order": 39,
    "mode": 0,
    "properties": {
-    "Node name for S&R": "CLIPTextEncode"
+    "Node name for S&R": "FluxGuidance"
    },
    "widgets_values": [
-    "pixel art large area rug, cream center with burgundy border pattern, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    3.5
    ],
    "inputs": [
     {
-     "name": "clip",
-     "type": "CLIP",
-     "link": 68
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 67
     }
    ],
    "outputs": [
@@ -1649,6 +1676,7 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
+      69,
       70
      ],
      "slot_index": 0
@@ -1656,11 +1684,11 @@
    ]
   },
   {
-   "id": 63,
+   "id": 67,
    "type": "KSampler",
    "pos": [
-    960,
-    1980
+    1160,
+    1740
    ],
    "size": [
     315,
@@ -1673,11 +1701,11 @@
     "Node name for S&R": "KSampler"
    },
    "widgets_values": [
-    123458,
+    123457,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -1685,22 +1713,22 @@
     {
      "name": "model",
      "type": "MODEL",
-     "link": 69
+     "link": 68
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 70
+     "link": 69
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 71
+     "link": 70
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 72
+     "link": 71
     }
    ],
    "outputs": [
@@ -1708,18 +1736,18 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      73
+      72
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 64,
+   "id": 68,
    "type": "VAEDecode",
    "pos": [
-    1320,
-    1980
+    1510,
+    1740
    ],
    "size": [
     210,
@@ -1736,12 +1764,12 @@
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 73
+     "link": 72
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 74
+     "link": 73
     }
    ],
    "outputs": [
@@ -1749,18 +1777,18 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      75
+      74
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 65,
+   "id": 69,
    "type": "SaveImage",
    "pos": [
-    1570,
-    1980
+    1760,
+    1740
    ],
    "size": [
     320,
@@ -1773,25 +1801,25 @@
     "Node name for S&R": "SaveImage"
    },
    "widgets_values": [
-    "paralation/rug2"
+    "paralation/tub"
    ],
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 75
+     "link": 74
     }
    ]
   },
   {
-   "id": 66,
+   "id": 70,
    "type": "CLIPTextEncode",
    "pos": [
     480,
-    2220
+    1980
    ],
    "size": [
-    430,
+    400,
     170
    ],
    "flags": {},
@@ -1801,12 +1829,50 @@
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "pixel art small brown rectangular doormat with woven texture, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "Ghibli style, large area rug, cream center with burgundy border pattern, hand drawn animation prop, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    ],
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
+     "link": 75
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      76
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 71,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    1980
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 44,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
      "link": 76
     }
    ],
@@ -1815,35 +1881,36 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      78
+      78,
+      79
      ],
      "slot_index": 0
     }
    ]
   },
   {
-   "id": 67,
+   "id": 72,
    "type": "KSampler",
    "pos": [
-    960,
-    2220
+    1160,
+    1980
    ],
    "size": [
     315,
     262
    ],
    "flags": {},
-   "order": 44,
+   "order": 45,
    "mode": 0,
    "properties": {
     "Node name for S&R": "KSampler"
    },
    "widgets_values": [
-    123459,
+    123458,
     "randomize",
-    8,
+    24,
     1,
-    "res_multistep",
+    "euler",
     "simple",
     1
    ],
@@ -1881,18 +1948,18 @@
    ]
   },
   {
-   "id": 68,
+   "id": 73,
    "type": "VAEDecode",
    "pos": [
-    1320,
-    2220
+    1510,
+    1980
    ],
    "size": [
     210,
     46
    ],
    "flags": {},
-   "order": 45,
+   "order": 46,
    "mode": 0,
    "properties": {
     "Node name for S&R": "VAEDecode"
@@ -1922,10 +1989,215 @@
    ]
   },
   {
-   "id": 69,
+   "id": 74,
    "type": "SaveImage",
    "pos": [
-    1570,
+    1760,
+    1980
+   ],
+   "size": [
+    320,
+    200
+   ],
+   "flags": {},
+   "order": 47,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "paralation/rug2"
+   ],
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 83
+    }
+   ]
+  },
+  {
+   "id": 75,
+   "type": "CLIPTextEncode",
+   "pos": [
+    480,
+    2220
+   ],
+   "size": [
+    400,
+    170
+   ],
+   "flags": {},
+   "order": 48,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Ghibli style, small brown rectangular doormat with woven texture, hand drawn animation prop, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   ],
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 84
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      85
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 76,
+   "type": "FluxGuidance",
+   "pos": [
+    910,
+    2220
+   ],
+   "size": [
+    220,
+    60
+   ],
+   "flags": {},
+   "order": 49,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "FluxGuidance"
+   },
+   "widgets_values": [
+    3.5
+   ],
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 85
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      87,
+      88
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 77,
+   "type": "KSampler",
+   "pos": [
+    1160,
+    2220
+   ],
+   "size": [
+    315,
+    262
+   ],
+   "flags": {},
+   "order": 50,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    123459,
+    "randomize",
+    24,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 86
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 87
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 88
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 89
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      90
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 78,
+   "type": "VAEDecode",
+   "pos": [
+    1510,
+    2220
+   ],
+   "size": [
+    210,
+    46
+   ],
+   "flags": {},
+   "order": 51,
+   "mode": 0,
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": [],
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 90
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 91
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      92
+     ],
+     "slot_index": 0
+    }
+   ]
+  },
+  {
+   "id": 79,
+   "type": "SaveImage",
+   "pos": [
+    1760,
     2220
    ],
    "size": [
@@ -1933,7 +2205,7 @@
     200
    ],
    "flags": {},
-   "order": 46,
+   "order": 52,
    "mode": 0,
    "properties": {
     "Node name for S&R": "SaveImage"
@@ -1945,7 +2217,7 @@
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 83
+     "link": 92
     }
    ]
   }
@@ -1961,49 +2233,49 @@
   ],
   [
    2,
-   3,
-   0,
-   6,
-   0,
+   1,
+   1,
+   2,
+   1,
    "CLIP"
   ],
   [
    3,
-   6,
-   0,
-   7,
-   0,
-   "CONDITIONING"
-  ],
-  [
-   4,
-   3,
-   0,
+   2,
+   1,
    30,
    0,
    "CLIP"
+  ],
+  [
+   4,
+   30,
+   0,
+   31,
+   0,
+   "CONDITIONING"
   ],
   [
    5,
    2,
    0,
-   31,
+   32,
    0,
    "MODEL"
   ],
   [
    6,
-   30,
-   0,
    31,
+   0,
+   32,
    1,
    "CONDITIONING"
   ],
   [
    7,
-   7,
-   0,
    31,
+   0,
+   32,
    2,
    "CONDITIONING"
   ],
@@ -2011,575 +2283,575 @@
    8,
    5,
    0,
-   31,
+   32,
    3,
    "LATENT"
   ],
   [
    9,
-   31,
-   0,
    32,
+   0,
+   33,
    0,
    "LATENT"
   ],
   [
    10,
-   4,
-   0,
-   32,
+   1,
+   2,
+   33,
    1,
    "VAE"
   ],
   [
    11,
-   32,
-   0,
    33,
+   0,
+   34,
    0,
    "IMAGE"
   ],
   [
    12,
-   3,
-   0,
-   34,
+   2,
+   1,
+   35,
    0,
    "CLIP"
   ],
   [
    13,
+   35,
+   0,
+   36,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   14,
    2,
    0,
-   35,
+   37,
    0,
    "MODEL"
   ],
   [
-   14,
-   34,
-   0,
-   35,
-   1,
-   "CONDITIONING"
-  ],
-  [
    15,
-   7,
+   36,
    0,
-   35,
-   2,
+   37,
+   1,
    "CONDITIONING"
   ],
   [
    16,
-   5,
+   36,
    0,
-   35,
-   3,
-   "LATENT"
+   37,
+   2,
+   "CONDITIONING"
   ],
   [
    17,
-   35,
+   5,
    0,
-   36,
-   0,
+   37,
+   3,
    "LATENT"
   ],
   [
    18,
-   4,
+   37,
    0,
-   36,
+   38,
+   0,
+   "LATENT"
+  ],
+  [
+   19,
+   1,
+   2,
+   38,
    1,
    "VAE"
   ],
   [
-   19,
-   36,
-   0,
-   37,
-   0,
-   "IMAGE"
-  ],
-  [
    20,
-   3,
-   0,
    38,
    0,
-   "CLIP"
+   39,
+   0,
+   "IMAGE"
   ],
   [
    21,
    2,
+   1,
+   40,
    0,
-   39,
-   0,
-   "MODEL"
+   "CLIP"
   ],
   [
    22,
-   38,
+   40,
    0,
-   39,
-   1,
+   41,
+   0,
    "CONDITIONING"
   ],
   [
    23,
-   7,
-   0,
-   39,
    2,
-   "CONDITIONING"
-  ],
-  [
-   24,
-   5,
-   0,
-   39,
-   3,
-   "LATENT"
-  ],
-  [
-   25,
-   39,
-   0,
-   40,
-   0,
-   "LATENT"
-  ],
-  [
-   26,
-   4,
-   0,
-   40,
-   1,
-   "VAE"
-  ],
-  [
-   27,
-   40,
-   0,
-   41,
-   0,
-   "IMAGE"
-  ],
-  [
-   28,
-   3,
    0,
    42,
-   0,
-   "CLIP"
-  ],
-  [
-   29,
-   2,
-   0,
-   43,
    0,
    "MODEL"
   ],
   [
-   30,
-   42,
+   24,
+   41,
    0,
-   43,
+   42,
    1,
    "CONDITIONING"
   ],
   [
-   31,
-   7,
+   25,
+   41,
+   0,
+   42,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   26,
+   5,
+   0,
+   42,
+   3,
+   "LATENT"
+  ],
+  [
+   27,
+   42,
    0,
    43,
+   0,
+   "LATENT"
+  ],
+  [
+   28,
+   1,
    2,
+   43,
+   1,
+   "VAE"
+  ],
+  [
+   29,
+   43,
+   0,
+   44,
+   0,
+   "IMAGE"
+  ],
+  [
+   30,
+   2,
+   1,
+   45,
+   0,
+   "CLIP"
+  ],
+  [
+   31,
+   45,
+   0,
+   46,
+   0,
    "CONDITIONING"
   ],
   [
    32,
-   5,
+   2,
    0,
-   43,
-   3,
-   "LATENT"
+   47,
+   0,
+   "MODEL"
   ],
   [
    33,
-   43,
+   46,
    0,
-   44,
-   0,
-   "LATENT"
+   47,
+   1,
+   "CONDITIONING"
   ],
   [
    34,
-   4,
+   46,
    0,
-   44,
-   1,
-   "VAE"
+   47,
+   2,
+   "CONDITIONING"
   ],
   [
    35,
-   44,
+   5,
    0,
-   45,
-   0,
-   "IMAGE"
+   47,
+   3,
+   "LATENT"
   ],
   [
    36,
-   3,
+   47,
    0,
-   46,
+   48,
    0,
-   "CLIP"
+   "LATENT"
   ],
   [
    37,
+   1,
    2,
-   0,
-   47,
-   0,
-   "MODEL"
+   48,
+   1,
+   "VAE"
   ],
   [
    38,
-   46,
+   48,
    0,
-   47,
-   1,
-   "CONDITIONING"
+   49,
+   0,
+   "IMAGE"
   ],
   [
    39,
-   7,
-   0,
-   47,
    2,
-   "CONDITIONING"
+   1,
+   50,
+   0,
+   "CLIP"
   ],
   [
    40,
-   5,
+   50,
    0,
-   47,
-   3,
-   "LATENT"
+   51,
+   0,
+   "CONDITIONING"
   ],
   [
    41,
-   47,
+   2,
    0,
-   48,
+   52,
    0,
-   "LATENT"
+   "MODEL"
   ],
   [
    42,
-   4,
+   51,
    0,
-   48,
+   52,
    1,
-   "VAE"
+   "CONDITIONING"
   ],
   [
    43,
-   48,
+   51,
    0,
-   49,
-   0,
-   "IMAGE"
+   52,
+   2,
+   "CONDITIONING"
   ],
   [
    44,
+   5,
+   0,
+   52,
    3,
-   0,
-   50,
-   0,
-   "CLIP"
+   "LATENT"
   ],
   [
    45,
-   2,
+   52,
    0,
-   51,
+   53,
    0,
-   "MODEL"
+   "LATENT"
   ],
   [
    46,
-   50,
-   0,
-   51,
    1,
-   "CONDITIONING"
+   2,
+   53,
+   1,
+   "VAE"
   ],
   [
    47,
-   7,
+   53,
    0,
-   51,
-   2,
-   "CONDITIONING"
+   54,
+   0,
+   "IMAGE"
   ],
   [
    48,
-   5,
+   2,
+   1,
+   55,
    0,
-   51,
-   3,
-   "LATENT"
+   "CLIP"
   ],
   [
    49,
-   51,
+   55,
    0,
-   52,
+   56,
    0,
-   "LATENT"
+   "CONDITIONING"
   ],
   [
    50,
-   4,
+   2,
    0,
-   52,
-   1,
-   "VAE"
+   57,
+   0,
+   "MODEL"
   ],
   [
    51,
-   52,
+   56,
    0,
-   53,
-   0,
-   "IMAGE"
-  ],
-  [
-   52,
-   3,
-   0,
-   54,
-   0,
-   "CLIP"
-  ],
-  [
-   53,
-   2,
-   0,
-   55,
-   0,
-   "MODEL"
-  ],
-  [
-   54,
-   54,
-   0,
-   55,
+   57,
    1,
    "CONDITIONING"
   ],
   [
-   55,
-   7,
+   52,
+   56,
    0,
-   55,
+   57,
    2,
    "CONDITIONING"
   ],
   [
-   56,
+   53,
    5,
    0,
-   55,
+   57,
    3,
    "LATENT"
   ],
   [
+   54,
    57,
-   55,
    0,
-   56,
+   58,
    0,
    "LATENT"
   ],
   [
+   55,
+   1,
+   2,
    58,
-   4,
-   0,
-   56,
    1,
    "VAE"
   ],
   [
-   59,
    56,
+   58,
    0,
-   57,
+   59,
    0,
    "IMAGE"
   ],
   [
+   57,
+   2,
+   1,
    60,
-   3,
-   0,
-   58,
    0,
    "CLIP"
   ],
   [
+   58,
+   60,
+   0,
    61,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   59,
    2,
    0,
-   59,
+   62,
    0,
    "MODEL"
   ],
   [
-   62,
-   58,
+   60,
+   61,
    0,
-   59,
+   62,
    1,
    "CONDITIONING"
   ],
   [
-   63,
-   7,
+   61,
+   61,
    0,
-   59,
+   62,
    2,
    "CONDITIONING"
+  ],
+  [
+   62,
+   5,
+   0,
+   62,
+   3,
+   "LATENT"
+  ],
+  [
+   63,
+   62,
+   0,
+   63,
+   0,
+   "LATENT"
   ],
   [
    64,
-   5,
-   0,
-   59,
-   3,
-   "LATENT"
-  ],
-  [
-   65,
-   59,
-   0,
-   60,
-   0,
-   "LATENT"
-  ],
-  [
-   66,
-   4,
-   0,
-   60,
+   1,
+   2,
+   63,
    1,
    "VAE"
   ],
   [
-   67,
-   60,
+   65,
+   63,
    0,
-   61,
+   64,
    0,
    "IMAGE"
   ],
   [
-   68,
-   3,
-   0,
-   62,
+   66,
+   2,
+   1,
+   65,
    0,
    "CLIP"
   ],
   [
-   69,
+   67,
+   65,
+   0,
+   66,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   68,
    2,
    0,
-   63,
+   67,
    0,
    "MODEL"
   ],
   [
-   70,
-   62,
+   69,
+   66,
    0,
-   63,
+   67,
    1,
+   "CONDITIONING"
+  ],
+  [
+   70,
+   66,
+   0,
+   67,
+   2,
    "CONDITIONING"
   ],
   [
    71,
-   7,
+   5,
    0,
-   63,
-   2,
-   "CONDITIONING"
+   67,
+   3,
+   "LATENT"
   ],
   [
    72,
-   5,
+   67,
    0,
-   63,
-   3,
+   68,
+   0,
    "LATENT"
   ],
   [
    73,
-   63,
-   0,
-   64,
-   0,
-   "LATENT"
-  ],
-  [
-   74,
-   4,
-   0,
-   64,
+   1,
+   2,
+   68,
    1,
    "VAE"
   ],
   [
-   75,
-   64,
+   74,
+   68,
    0,
-   65,
+   69,
    0,
    "IMAGE"
   ],
   [
-   76,
-   3,
-   0,
-   66,
+   75,
+   2,
+   1,
+   70,
    0,
    "CLIP"
+  ],
+  [
+   76,
+   70,
+   0,
+   71,
+   0,
+   "CONDITIONING"
   ],
   [
    77,
    2,
    0,
-   67,
+   72,
    0,
    "MODEL"
   ],
   [
    78,
-   66,
+   71,
    0,
-   67,
+   72,
    1,
    "CONDITIONING"
   ],
   [
    79,
-   7,
+   71,
    0,
-   67,
+   72,
    2,
    "CONDITIONING"
   ],
@@ -2587,31 +2859,103 @@
    80,
    5,
    0,
-   67,
+   72,
    3,
    "LATENT"
   ],
   [
    81,
-   67,
+   72,
    0,
-   68,
+   73,
    0,
    "LATENT"
   ],
   [
    82,
-   4,
-   0,
-   68,
+   1,
+   2,
+   73,
    1,
    "VAE"
   ],
   [
    83,
-   68,
+   73,
    0,
-   69,
+   74,
+   0,
+   "IMAGE"
+  ],
+  [
+   84,
+   2,
+   1,
+   75,
+   0,
+   "CLIP"
+  ],
+  [
+   85,
+   75,
+   0,
+   76,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   86,
+   2,
+   0,
+   77,
+   0,
+   "MODEL"
+  ],
+  [
+   87,
+   76,
+   0,
+   77,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   88,
+   76,
+   0,
+   77,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   89,
+   5,
+   0,
+   77,
+   3,
+   "LATENT"
+  ],
+  [
+   90,
+   77,
+   0,
+   78,
+   0,
+   "LATENT"
+  ],
+  [
+   91,
+   1,
+   2,
+   78,
+   1,
+   "VAE"
+  ],
+  [
+   92,
+   78,
+   0,
+   79,
    0,
    "IMAGE"
   ]

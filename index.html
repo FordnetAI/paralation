@@ -8,7 +8,8 @@
 <style>
   html, body { margin: 0; height: 100%; background: #08070d; overflow: hidden; }
   body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  canvas { image-rendering: pixelated; width: min(100vw, 170vh); }
+  /* art direction v2: painterly sprites want smooth upscaling, not pixelated */
+  canvas { width: min(100vw, 170vh); }
   /* feedback bar: kept out of the canvas so it never steals a keypress */
   #feedback {
     font: 11px/1 system-ui, sans-serif; color: #55506e;

@@ -6,6 +6,20 @@
 
 ## Claude's working notes
 
+## ART DIRECTION v2 (Aug 16 2026): READ THIS FIRST
+
+The game moved OFF pixel art onto Ghibli painterly (Flux Dev + Ghibli LoRA).
+make_workflows.py is the source of truth and all five paralation-* workflows in
+the sidebar are already on the new stack: open one, press Run, done. Everything
+below this section describing "pixel art / 32-bit SNES" prompts is HISTORICAL,
+kept because the per-item text (the part between the trigger and the style
+lock) and the magenta/colour rules still apply unchanged.
+
+Current style lock (see full_prompt in make_workflows.py):
+`Ghibli style, <item>, hand drawn animation prop|building, <view>, single
+object centered on plain magenta background, no drop shadow, warm cozy colors,
+soft painterly shading, game asset`
+
 ## How to run (Comfy Desktop)
 
 1. Open Comfy Desktop. In the Workflows sidebar (folder icon, top left), open **paralation-furniture**. It is already installed in your workflow library, no dragging needed. The graph is the official Z Image Turbo layout (UNETLoader + CLIPLoader in lumina2 mode + ModelSamplingAuraFlow), verified working on your install via the API on Aug 15 2026: the bed in the game right now came out of this exact graph.

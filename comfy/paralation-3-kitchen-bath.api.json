@@ -1,53 +1,25 @@
 {
  "prompt": {
   "1": {
-   "class_type": "UNETLoader",
+   "class_type": "CheckpointLoaderSimple",
    "inputs": {
-    "unet_name": "z_image_turbo_bf16.safetensors",
-    "weight_dtype": "default"
+    "ckpt_name": "flux1-dev-fp8.safetensors"
    }
   },
   "2": {
-   "class_type": "ModelSamplingAuraFlow",
+   "class_type": "LoraLoader",
    "inputs": {
     "model": [
      "1",
      0
     ],
-    "shift": 3
-   }
-  },
-  "3": {
-   "class_type": "CLIPLoader",
-   "inputs": {
-    "clip_name": "qwen_3_4b_fp8_mixed.safetensors",
-    "type": "lumina2",
-    "device": "default"
-   }
-  },
-  "4": {
-   "class_type": "VAELoader",
-   "inputs": {
-    "vae_name": "z_image_ae.safetensors"
-   }
-  },
-  "6": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
     "clip": [
-     "3",
-     0
+     "1",
+     1
     ],
-    "text": ""
-   }
-  },
-  "7": {
-   "class_type": "ConditioningZeroOut",
-   "inputs": {
-    "conditioning": [
-     "6",
-     0
-    ]
+    "lora_name": "Ghibli_style_flux.safetensors",
+    "strength_model": 0.95,
+    "strength_clip": 0.95
    }
   },
   "5": {
@@ -62,13 +34,23 @@
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
+     "2",
+     1
     ],
-    "text": "pixel art kitchen base cabinet with light stone countertop, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "Ghibli style, kitchen base cabinet with light stone countertop, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
   "31": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "30",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "32": {
    "class_type": "KSampler",
    "inputs": {
     "model": [
@@ -76,11 +58,11 @@
      0
     ],
     "positive": [
-     "30",
+     "31",
      0
     ],
     "negative": [
-     "7",
+     "31",
      0
     ],
     "latent_image": [
@@ -88,47 +70,57 @@
      0
     ],
     "seed": 987650,
-    "steps": 8,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
   },
-  "32": {
+  "33": {
    "class_type": "VAEDecode",
    "inputs": {
     "samples": [
-     "31",
+     "32",
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
-  "33": {
+  "34": {
    "class_type": "SaveImage",
    "inputs": {
     "images": [
-     "32",
+     "33",
      0
     ],
     "filename_prefix": "paralation/counter"
    }
   },
-  "34": {
+  "35": {
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
+     "2",
+     1
     ],
-    "text": "pixel art kitchen counter with steel sink basin and faucet, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "Ghibli style, kitchen counter with steel sink basin and faucet, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
-  "35": {
+  "36": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "35",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "37": {
    "class_type": "KSampler",
    "inputs": {
     "model": [
@@ -136,11 +128,11 @@
      0
     ],
     "positive": [
-     "34",
+     "36",
      0
     ],
     "negative": [
-     "7",
+     "36",
      0
     ],
     "latent_image": [
@@ -148,47 +140,57 @@
      0
     ],
     "seed": 987651,
-    "steps": 8,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
   },
-  "36": {
+  "38": {
    "class_type": "VAEDecode",
    "inputs": {
     "samples": [
-     "35",
+     "37",
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
-  "37": {
+  "39": {
    "class_type": "SaveImage",
    "inputs": {
     "images": [
-     "36",
+     "38",
      0
     ],
     "filename_prefix": "paralation/counterSink"
    }
   },
-  "38": {
+  "40": {
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
+     "2",
+     1
     ],
-    "text": "pixel art kitchen counter with a small handwritten note lying on top, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "Ghibli style, kitchen counter with a small handwritten note lying on top, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
-  "39": {
+  "41": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "40",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "42": {
    "class_type": "KSampler",
    "inputs": {
     "model": [
@@ -196,11 +198,11 @@
      0
     ],
     "positive": [
-     "38",
+     "41",
      0
     ],
     "negative": [
-     "7",
+     "41",
      0
     ],
     "latent_image": [
@@ -208,104 +210,54 @@
      0
     ],
     "seed": 987652,
-    "steps": 8,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
   },
-  "40": {
+  "43": {
    "class_type": "VAEDecode",
    "inputs": {
     "samples": [
-     "39",
+     "42",
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
-  "41": {
+  "44": {
    "class_type": "SaveImage",
    "inputs": {
     "images": [
-     "40",
+     "43",
      0
     ],
     "filename_prefix": "paralation/counterNote"
    }
   },
-  "42": {
+  "45": {
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art white kitchen stove with black burners and oven window, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "43": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
      "2",
-     0
+     1
     ],
-    "positive": [
-     "42",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987653,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "44": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "43",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "45": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "44",
-     0
-    ],
-    "filename_prefix": "paralation/stove"
+    "text": "Ghibli style, white kitchen stove with black burners and oven window, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
   "46": {
-   "class_type": "CLIPTextEncode",
+   "class_type": "FluxGuidance",
    "inputs": {
-    "clip": [
-     "3",
+    "conditioning": [
+     "45",
      0
     ],
-    "text": "pixel art white refrigerator with door handles and fridge magnets, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "guidance": 3.5
    }
   },
   "47": {
@@ -320,17 +272,17 @@
      0
     ],
     "negative": [
-     "7",
+     "46",
      0
     ],
     "latent_image": [
      "5",
      0
     ],
-    "seed": 987654,
-    "steps": 8,
+    "seed": 987653,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
@@ -343,8 +295,8 @@
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
@@ -355,20 +307,30 @@
      "48",
      0
     ],
-    "filename_prefix": "paralation/fridge"
+    "filename_prefix": "paralation/stove"
    }
   },
   "50": {
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
+     "2",
+     1
     ],
-    "text": "pixel art white porcelain toilet with tank, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "Ghibli style, white refrigerator with door handles and fridge magnets, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
   "51": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "50",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "52": {
    "class_type": "KSampler",
    "inputs": {
     "model": [
@@ -376,11 +338,81 @@
      0
     ],
     "positive": [
-     "50",
+     "51",
      0
     ],
     "negative": [
-     "7",
+     "51",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987654,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "53": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "52",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "54": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "53",
+     0
+    ],
+    "filename_prefix": "paralation/fridge"
+   }
+  },
+  "55": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, white porcelain toilet with tank, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "56": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "55",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "57": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "56",
+     0
+    ],
+    "negative": [
+     "56",
      0
     ],
     "latent_image": [
@@ -388,47 +420,57 @@
      0
     ],
     "seed": 987655,
-    "steps": 8,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
   },
-  "52": {
+  "58": {
    "class_type": "VAEDecode",
    "inputs": {
     "samples": [
-     "51",
+     "57",
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
-  "53": {
+  "59": {
    "class_type": "SaveImage",
    "inputs": {
     "images": [
-     "52",
+     "58",
      0
     ],
     "filename_prefix": "paralation/toilet"
    }
   },
-  "54": {
+  "60": {
    "class_type": "CLIPTextEncode",
    "inputs": {
     "clip": [
-     "3",
-     0
+     "2",
+     1
     ],
-    "text": "pixel art white pedestal bathroom sink, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "text": "Ghibli style, white pedestal bathroom sink, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
-  "55": {
+  "61": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "60",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "62": {
    "class_type": "KSampler",
    "inputs": {
     "model": [
@@ -436,11 +478,11 @@
      0
     ],
     "positive": [
-     "54",
+     "61",
      0
     ],
     "negative": [
-     "7",
+     "61",
      0
     ],
     "latent_image": [
@@ -448,164 +490,54 @@
      0
     ],
     "seed": 987656,
-    "steps": 8,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
   },
-  "56": {
+  "63": {
    "class_type": "VAEDecode",
    "inputs": {
     "samples": [
-     "55",
+     "62",
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
-  "57": {
+  "64": {
    "class_type": "SaveImage",
    "inputs": {
     "images": [
-     "56",
+     "63",
      0
     ],
     "filename_prefix": "paralation/sinkP"
    }
   },
-  "58": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art white bathtub filled with blue water, 32-bit SNES style RPG furniture sprite, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "59": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "58",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987657,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "60": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "59",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
-  "61": {
-   "class_type": "SaveImage",
-   "inputs": {
-    "images": [
-     "60",
-     0
-    ],
-    "filename_prefix": "paralation/tub"
-   }
-  },
-  "62": {
-   "class_type": "CLIPTextEncode",
-   "inputs": {
-    "clip": [
-     "3",
-     0
-    ],
-    "text": "pixel art large area rug, cream center with burgundy border pattern, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
-   }
-  },
-  "63": {
-   "class_type": "KSampler",
-   "inputs": {
-    "model": [
-     "2",
-     0
-    ],
-    "positive": [
-     "62",
-     0
-    ],
-    "negative": [
-     "7",
-     0
-    ],
-    "latent_image": [
-     "5",
-     0
-    ],
-    "seed": 987658,
-    "steps": 8,
-    "cfg": 1,
-    "sampler_name": "res_multistep",
-    "scheduler": "simple",
-    "denoise": 1
-   }
-  },
-  "64": {
-   "class_type": "VAEDecode",
-   "inputs": {
-    "samples": [
-     "63",
-     0
-    ],
-    "vae": [
-     "4",
-     0
-    ]
-   }
-  },
   "65": {
-   "class_type": "SaveImage",
+   "class_type": "CLIPTextEncode",
    "inputs": {
-    "images": [
-     "64",
-     0
+    "clip": [
+     "2",
+     1
     ],
-    "filename_prefix": "paralation/rug2"
+    "text": "Ghibli style, white bathtub filled with blue water, hand drawn animation prop, front view seen from the front and slightly above like Stardew Valley interior furniture, flat 2D, no perspective, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
    }
   },
   "66": {
-   "class_type": "CLIPTextEncode",
+   "class_type": "FluxGuidance",
    "inputs": {
-    "clip": [
-     "3",
+    "conditioning": [
+     "65",
      0
     ],
-    "text": "pixel art small brown rectangular doormat with woven texture, 32-bit SNES style RPG furniture sprite, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft top-left lighting, clean dark outline, detailed shading, game asset"
+    "guidance": 3.5
    }
   },
   "67": {
@@ -620,17 +552,17 @@
      0
     ],
     "negative": [
-     "7",
+     "66",
      0
     ],
     "latent_image": [
      "5",
      0
     ],
-    "seed": 987659,
-    "steps": 8,
+    "seed": 987657,
+    "steps": 24,
     "cfg": 1,
-    "sampler_name": "res_multistep",
+    "sampler_name": "euler",
     "scheduler": "simple",
     "denoise": 1
    }
@@ -643,8 +575,8 @@
      0
     ],
     "vae": [
-     "4",
-     0
+     "1",
+     2
     ]
    }
   },
@@ -653,6 +585,146 @@
    "inputs": {
     "images": [
      "68",
+     0
+    ],
+    "filename_prefix": "paralation/tub"
+   }
+  },
+  "70": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, large area rug, cream center with burgundy border pattern, hand drawn animation prop, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "71": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "70",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "72": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "71",
+     0
+    ],
+    "negative": [
+     "71",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987658,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "73": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "72",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "74": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "73",
+     0
+    ],
+    "filename_prefix": "paralation/rug2"
+   }
+  },
+  "75": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style, small brown rectangular doormat with woven texture, hand drawn animation prop, viewed directly from above, flat top-down, single object centered on plain magenta background, no drop shadow, warm cozy colors, soft painterly shading, game asset"
+   }
+  },
+  "76": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "75",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "77": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "76",
+     0
+    ],
+    "negative": [
+     "76",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987659,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "78": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "77",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "79": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "78",
      0
     ],
     "filename_prefix": "paralation/mat"

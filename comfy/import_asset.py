@@ -90,7 +90,6 @@ OUTLINE_RGBA = (14, 11, 18, 255)
 # parents' dusty-pink bedding first gets nibbled at 28 and is destroyed at 34.
 POCKET_THRESHOLD = 22
 MIN_POCKET_AREA = 400  # px in the 1024 raw; below this it is speckle, not a gap
-PALETTE_COLORS = 32
 
 
 def key_background(im, aggressive=False):
@@ -222,6 +221,14 @@ def _bg_surface(a, cleared=None):
 
 
 def pixelize(im, name, outline=OUTLINE):
+    """Cut a keyed generation down to its game sprite.
+
+    Art direction v2 (Ghibli painterly): the downscale is LANCZOS with soft
+    alpha, and there is no palette quantize -- smooth painterly gradients are
+    the point of the new style. The name 'pixelize' survives from the pixel-art
+    era so callers did not have to change. Keying, bottom-centre anchoring and
+    the comic outline all behave exactly as before.
+    """
     lw, lh = SIZES[name]
     tw, th = lw * 2, lh * 2
     bbox = im.getbbox()
@@ -233,69 +240,38 @@ def pixelize(im, name, outline=OUTLINE):
     f = min((tw - 2 * outline) / cw, (th - 2 * outline) / ch)
     nw, nh = max(1, round(cw * f)), max(1, round(ch * f))
 
-    # Alpha-weighted (premultiplied) downscale. key_background zeroes alpha but
-    # LEAVES the background RGB in place, so a plain BOX resize area-averages
-    # that pink into every edge pixel and rings the sprite with muddy fringe --
-    # this was the dark halo around the toilet. Premultiplying means fully
-    # transparent pixels contribute nothing, so edges take their colour only
-    # from the object itself.
+    # Alpha-weighted (premultiplied) downscale, so keyed-out backdrop RGB
+    # contributes nothing and edges take their colour only from the object.
     src = np.asarray(im, dtype=np.float64)
     al = src[:, :, 3:4] / 255.0
     prem = np.concatenate([src[:, :, :3] * al, src[:, :, 3:4]], axis=2)
     small = np.asarray(
-        Image.fromarray(prem.astype(np.uint8), 'RGBA').resize((nw, nh), Image.BOX),
+        Image.fromarray(prem.astype(np.uint8), 'RGBA').resize((nw, nh), Image.LANCZOS),
         dtype=np.float64)
-    sa = small[:, :, 3:4] / 255.0
-    rgb_f = np.divide(small[:, :, :3], sa, out=np.zeros_like(small[:, :, :3]), where=sa > 0)
-    im = Image.fromarray(
-        np.concatenate([np.clip(rgb_f, 0, 255), small[:, :, 3:4]], axis=2).astype(np.uint8),
-        'RGBA')
+    sa = np.clip(small[:, :, 3:4], 0, 255) / 255.0
+    rgb_f = np.divide(small[:, :, :3], np.maximum(sa, 1e-6),
+                      out=np.zeros_like(small[:, :, :3]), where=sa > 1e-6)
+    # kill sub-visible alpha haze but keep soft anti-aliased edges
+    a8 = np.clip(small[:, :, 3:4], 0, 255)
+    a8[a8 < 24] = 0
+    sprite = Image.fromarray(
+        np.concatenate([np.clip(rgb_f, 0, 255), a8], axis=2).astype(np.uint8), 'RGBA')
 
-    # crisp alpha, then palette quantize the color channels
-    alpha = im.getchannel('A').point(lambda a: 255 if a >= 128 else 0)
-    rgb = im.convert('RGB').quantize(colors=PALETTE_COLORS, method=Image.MEDIANCUT).convert('RGB')
     out = Image.new('RGBA', (tw, th), (0, 0, 0, 0))
-    sprite = rgb.convert('RGBA')
-    sprite.putalpha(alpha)
     # furniture sits on the floor: anchor bottom-center, above the outline gap
     out.paste(sprite, ((tw - nw) // 2, th - nh - outline), sprite)
     if outline > 0:
         arr = np.asarray(out).copy()
-        arr = _smooth_silhouette(arr)
         # comic contour: dilate the silhouette outward into near-black with a
-        # CROSS kernel. Diamond growth chamfers diagonal steps to 45 degrees;
-        # a square kernel grows a blocky knob at every step and reads jagged.
+        # CROSS kernel. Diamond growth chamfers diagonal steps to 45 degrees.
+        # The outline overwrites the soft edge band OUTSIDE the solid core, so
+        # the line stays clean against any ground.
         cross = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], bool)
-        op = arr[:, :, 3] > 0
+        op = arr[:, :, 3] > 128
         ring = ndimage.binary_dilation(op, structure=cross, iterations=outline) & ~op
         arr[ring] = OUTLINE_RGBA
         out = Image.fromarray(arr)
     return out
-
-
-def _smooth_silhouette(arr):
-    """De-jag the sprite's edge before outlining: fill transparent one-pixel
-    notches (3+ opaque orthogonal neighbours, coloured from their average) and
-    shave opaque one-pixel nubs (at most 1 opaque orthogonal neighbour). Two
-    gentle passes; 2px-wide features like chair legs are untouched because
-    every pixel in them keeps 2 neighbours."""
-    k = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], float)
-    for _ in range(2):
-        op = arr[:, :, 3] > 0
-        n4 = ndimage.convolve(op.astype(float), k, mode='constant')
-        nub = op & (n4 <= 1)
-        notch = ~op & (n4 >= 3)
-        if not nub.any() and not notch.any():
-            break
-        if notch.any():
-            opf = op.astype(float)
-            for c in range(3):
-                s = ndimage.convolve(arr[:, :, c] * opf, k, mode='constant')
-                arr[:, :, c][notch] = (s[notch] / n4[notch]).astype(arr.dtype)
-            arr[:, :, 3][notch] = 255
-        if nub.any():
-            arr[:, :, 3][nub] = 0
-    return arr
 
 
 def import_one(path, name):

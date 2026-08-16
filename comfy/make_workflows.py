@@ -19,9 +19,16 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 LIBRARY = r'E:\Comfy-Desktop\ComfyUI\ComfyUI\user\default\workflows'
 
-UNET = 'z_image_turbo_bf16.safetensors'
-CLIP = 'qwen_3_4b_fp8_mixed.safetensors'
-VAE = 'z_image_ae.safetensors'
+# Art direction v2 (locked Aug 16 2026): Ghibli painterly on Flux Dev.
+# Chosen by bake-off against 5 styles: Ghibli keyed with 0.00-0.04% backdrop
+# leak and perfect single-object discipline where the runner-up (Casual Game
+# Art) baked ground slabs and scenery into 2 of 4 probes. See the workability
+# sheet in the repo history and ClaudeParalation.md.
+CKPT = 'flux1-dev-fp8.safetensors'
+LORA = 'Ghibli_style_flux.safetensors'
+LORA_STRENGTH = 0.95
+GUIDANCE = 3.5
+STEPS = 24
 
 VIEWS = {
     'front': ('front view seen from the front and slightly above like Stardew Valley '
@@ -40,11 +47,11 @@ SQUARE, WIDE, TALL = (1024, 1024), (1216, 896), (832, 1216)
 
 
 def full_prompt(item_text, view='front'):
-    kind = 'building' if view == 'ext' else 'furniture'
-    return ('pixel art %s, 32-bit SNES style RPG %s sprite, %s, '
+    kind = 'building' if view == 'ext' else 'prop'
+    return ('Ghibli style, %s, hand drawn animation %s, %s, '
             'single object centered on plain magenta background, no drop shadow, '
-            'warm cozy colors, soft top-left lighting, clean dark outline, '
-            'detailed shading, game asset' % (item_text, kind, VIEWS[view]))
+            'warm cozy colors, soft painterly shading, game asset'
+            % (item_text, kind, VIEWS[view]))
 
 
 # (assetName, item text, view[, latent size])
@@ -160,53 +167,49 @@ def build_ui(items):
         src['outputs'][fslot]['links'].append(lid[0])
         dst['inputs'][tslot]['link'] = lid[0]
 
-    unet = node(1, 'UNETLoader', [40, 80], [340, 82], [UNET, 'default'],
-                n_out=[('MODEL', 'MODEL')])
-    aura = node(2, 'ModelSamplingAuraFlow', [40, 210], [340, 58], [3],
-                n_in=[('model', 'MODEL')], n_out=[('MODEL', 'MODEL')])
-    clip = node(3, 'CLIPLoader', [40, 320], [340, 106], [CLIP, 'lumina2', 'default'],
-                n_out=[('CLIP', 'CLIP')])
-    vae = node(4, 'VAELoader', [40, 480], [340, 58], [VAE],
-               n_out=[('VAE', 'VAE')])
-    neg = node(6, 'CLIPTextEncode', [40, 750], [340, 96], [''],
-               n_in=[('clip', 'CLIP')], n_out=[('CONDITIONING', 'CONDITIONING')])
-    zero = node(7, 'ConditioningZeroOut', [40, 900], [340, 46], [],
-                n_in=[('conditioning', 'CONDITIONING')],
-                n_out=[('CONDITIONING', 'CONDITIONING')])
-    connect(unet, 0, aura, 0, 'MODEL')
-    connect(clip, 0, neg, 0, 'CLIP')
-    connect(neg, 0, zero, 0, 'CONDITIONING')
+    ckpt = node(1, 'CheckpointLoaderSimple', [40, 80], [340, 100], [CKPT],
+                n_out=[('MODEL', 'MODEL'), ('CLIP', 'CLIP'), ('VAE', 'VAE')])
+    lora = node(2, 'LoraLoader', [40, 240], [340, 126],
+                [LORA, LORA_STRENGTH, LORA_STRENGTH],
+                n_in=[('model', 'MODEL'), ('clip', 'CLIP')],
+                n_out=[('MODEL', 'MODEL'), ('CLIP', 'CLIP')])
+    connect(ckpt, 0, lora, 0, 'MODEL')
+    connect(ckpt, 1, lora, 1, 'CLIP')
     # one latent node per distinct shape, shared by every chain that wants it
     lats, lat_ids = {}, [5, 8, 9]
     for i, sz in enumerate(sorted({unpack(it)[3] for it in items})):
-        lats[sz] = node(lat_ids[i], 'EmptySD3LatentImage', [40, 590 + i * 130],
+        lats[sz] = node(lat_ids[i], 'EmptySD3LatentImage', [40, 430 + i * 130],
                         [340, 106], [sz[0], sz[1], 1], n_out=[('LATENT', 'LATENT')])
 
     nid = 30
     for i, item in enumerate(items):
         name, text, view, sz = unpack(item)
         y = 60 + i * 240
-        p = node(nid, 'CLIPTextEncode', [480, y], [430, 170], [full_prompt(text, view)],
+        p = node(nid, 'CLIPTextEncode', [480, y], [400, 170], [full_prompt(text, view)],
                  n_in=[('clip', 'CLIP')], n_out=[('CONDITIONING', 'CONDITIONING')])
-        k = node(nid + 1, 'KSampler', [960, y], [315, 262],
-                 [123450 + i, 'randomize', 8, 1, 'res_multistep', 'simple', 1],
+        fg = node(nid + 1, 'FluxGuidance', [910, y], [220, 60], [GUIDANCE],
+                  n_in=[('conditioning', 'CONDITIONING')],
+                  n_out=[('CONDITIONING', 'CONDITIONING')])
+        k = node(nid + 2, 'KSampler', [1160, y], [315, 262],
+                 [123450 + i, 'randomize', STEPS, 1, 'euler', 'simple', 1],
                  n_in=[('model', 'MODEL'), ('positive', 'CONDITIONING'),
                        ('negative', 'CONDITIONING'), ('latent_image', 'LATENT')],
                  n_out=[('LATENT', 'LATENT')])
-        d = node(nid + 2, 'VAEDecode', [1320, y], [210, 46], [],
+        d = node(nid + 3, 'VAEDecode', [1510, y], [210, 46], [],
                  n_in=[('samples', 'LATENT'), ('vae', 'VAE')],
                  n_out=[('IMAGE', 'IMAGE')])
-        s = node(nid + 3, 'SaveImage', [1570, y], [320, 200], ['paralation/' + name],
+        s = node(nid + 4, 'SaveImage', [1760, y], [320, 200], ['paralation/' + name],
                  n_in=[('images', 'IMAGE')])
-        connect(clip, 0, p, 0, 'CLIP')
-        connect(aura, 0, k, 0, 'MODEL')
-        connect(p, 0, k, 1, 'CONDITIONING')
-        connect(zero, 0, k, 2, 'CONDITIONING')
+        connect(lora, 1, p, 0, 'CLIP')
+        connect(p, 0, fg, 0, 'CONDITIONING')
+        connect(lora, 0, k, 0, 'MODEL')
+        connect(fg, 0, k, 1, 'CONDITIONING')
+        connect(fg, 0, k, 2, 'CONDITIONING')
         connect(lats[sz], 0, k, 3, 'LATENT')
         connect(k, 0, d, 0, 'LATENT')
-        connect(vae, 0, d, 1, 'VAE')
+        connect(ckpt, 2, d, 1, 'VAE')
         connect(d, 0, s, 0, 'IMAGE')
-        nid += 4
+        nid += 5
 
     return {
         'last_node_id': nid - 1, 'last_link_id': lid[0],
@@ -217,12 +220,10 @@ def build_ui(items):
 
 def build_api(items):
     p = {
-        '1': {'class_type': 'UNETLoader', 'inputs': {'unet_name': UNET, 'weight_dtype': 'default'}},
-        '2': {'class_type': 'ModelSamplingAuraFlow', 'inputs': {'model': ['1', 0], 'shift': 3}},
-        '3': {'class_type': 'CLIPLoader', 'inputs': {'clip_name': CLIP, 'type': 'lumina2', 'device': 'default'}},
-        '4': {'class_type': 'VAELoader', 'inputs': {'vae_name': VAE}},
-        '6': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['3', 0], 'text': ''}},
-        '7': {'class_type': 'ConditioningZeroOut', 'inputs': {'conditioning': ['6', 0]}},
+        '1': {'class_type': 'CheckpointLoaderSimple', 'inputs': {'ckpt_name': CKPT}},
+        '2': {'class_type': 'LoraLoader', 'inputs': {
+            'model': ['1', 0], 'clip': ['1', 1], 'lora_name': LORA,
+            'strength_model': LORA_STRENGTH, 'strength_clip': LORA_STRENGTH}},
     }
     lats, lat_ids = {}, ['5', '8', '9']
     for i, sz in enumerate(sorted({unpack(it)[3] for it in items})):
@@ -232,15 +233,17 @@ def build_api(items):
     nid = 30
     for i, item in enumerate(items):
         name, text, view, sz = unpack(item)
-        pid, kid, did, sid = str(nid), str(nid + 1), str(nid + 2), str(nid + 3)
-        p[pid] = {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['3', 0], 'text': full_prompt(text, view)}}
+        pid, fid, kid, did, sid = (str(nid), str(nid + 1), str(nid + 2),
+                                   str(nid + 3), str(nid + 4))
+        p[pid] = {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['2', 1], 'text': full_prompt(text, view)}}
+        p[fid] = {'class_type': 'FluxGuidance', 'inputs': {'conditioning': [pid, 0], 'guidance': GUIDANCE}}
         p[kid] = {'class_type': 'KSampler', 'inputs': {
-            'model': ['2', 0], 'positive': [pid, 0], 'negative': ['7', 0],
-            'latent_image': [lats[sz], 0], 'seed': 987650 + i, 'steps': 8, 'cfg': 1,
-            'sampler_name': 'res_multistep', 'scheduler': 'simple', 'denoise': 1}}
-        p[did] = {'class_type': 'VAEDecode', 'inputs': {'samples': [kid, 0], 'vae': ['4', 0]}}
+            'model': ['2', 0], 'positive': [fid, 0], 'negative': [fid, 0],
+            'latent_image': [lats[sz], 0], 'seed': 987650 + i, 'steps': STEPS, 'cfg': 1,
+            'sampler_name': 'euler', 'scheduler': 'simple', 'denoise': 1}}
+        p[did] = {'class_type': 'VAEDecode', 'inputs': {'samples': [kid, 0], 'vae': ['1', 2]}}
         p[sid] = {'class_type': 'SaveImage', 'inputs': {'images': [did, 0], 'filename_prefix': 'paralation/' + name}}
-        nid += 4
+        nid += 5
     return {'prompt': p}
 
 
