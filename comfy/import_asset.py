@@ -15,6 +15,8 @@ import sys
 import os
 import re
 from collections import deque
+import numpy as np
+from scipy import ndimage
 from PIL import Image
 
 # logical (16px-scale) sprite sizes from sprites.js defs; output is 2x these
@@ -33,7 +35,12 @@ SIZES = {
 }
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
-BG_THRESHOLD = 60  # color distance from corner-sampled background color
+BG_THRESHOLD = 60   # color distance from corner-sampled background color
+# Distance from the FITTED local background, not from a corner sample. Chosen by
+# sweeping: a real pocket IS the backdrop so it sits near zero, while the
+# parents' dusty-pink bedding first gets nibbled at 28 and is destroyed at 34.
+POCKET_THRESHOLD = 22
+MIN_POCKET_AREA = 400  # px in the 1024 raw; below this it is speckle, not a gap
 PALETTE_COLORS = 32
 
 
@@ -75,7 +82,64 @@ def key_background(im):
             if 0 <= nx < w and 0 <= ny < h and not visited[ny * w + nx] and is_bg(px[nx, ny]):
                 visited[ny * w + nx] = 1
                 q.append((nx, ny))
+
+    # Enclosed pockets. The flood fill above only reaches background connected
+    # to the border, so a gap ringed by the object -- a chair's backrest slot,
+    # the space between a table's legs -- survives as solid background colour.
+    # Harmless when the backdrop was white; glaring on hot pink.
+    #
+    # These backdrops are NOT flat: they carry a vignette, so a fixed distance
+    # from the corner colour cannot separate background from a terracotta pot
+    # or dusty pink bedding (measured: the backdrop varies by up to 34 across
+    # one image, which is the same ballpark as the gap to those objects).
+    # Instead fit the backdrop's own gradient from the pixels the flood fill
+    # already proved were background, then compare each survivor to the fit AT
+    # ITS OWN POSITION.
+    a = np.asarray(im, dtype=np.int16)
+    est = _bg_surface(a)
+    if est is not None:
+        d = np.abs(a[:, :, :3].astype(np.float64) - est).sum(axis=2)
+        pocket = (d < POCKET_THRESHOLD) & (a[:, :, 3] > 0)
+        # Require pockets to be genuinely ENCLOSED. The flood fill already
+        # cleared everything reachable from the border, so a real pocket cannot
+        # touch the transparent region. Anything that does is a colour match
+        # nibbling the object's outline -- it was eating the edge of the
+        # parents' bedding, which is nearly the same pink as the backdrop.
+        if pocket.any():
+            lab, n = ndimage.label(pocket)
+            if n:
+                touching = np.unique(lab[ndimage.binary_dilation(a[:, :, 3] == 0) & pocket])
+                bad = set(int(v) for v in touching if v > 0)
+                # ...and big enough to be a real gap. A chair's backrest slot is
+                # thousands of pixels; what was nibbling the bedding was specks.
+                sizes = ndimage.sum(pocket, lab, range(1, n + 1))
+                bad.update(i + 1 for i, s in enumerate(sizes) if s < MIN_POCKET_AREA)
+                if bad:
+                    pocket &= ~np.isin(lab, list(bad))
+        if pocket.any():
+            a[:, :, 3][pocket] = 0
+            im = Image.fromarray(a.astype(np.uint8), 'RGBA')
     return im
+
+
+def _bg_surface(a):
+    """Least-squares quadratic fit of the backdrop, trained only on pixels the
+    border flood fill already cleared. Returns an h*w*3 estimate of what the
+    backdrop looks like at every position, vignette included."""
+    h, w, _ = a.shape
+    ys, xs = np.nonzero(a[:, :, 3] == 0)
+    if len(xs) < 256:
+        return None
+    X, Y = xs / w - 0.5, ys / h - 0.5
+    A = np.stack([np.ones_like(X), X, Y, X * X, X * Y, Y * Y], axis=1)
+    gy, gx = np.mgrid[0:h, 0:w]
+    GX, GY = gx / w - 0.5, gy / h - 0.5
+    B = np.stack([np.ones_like(GX), GX, GY, GX * GX, GX * GY, GY * GY], axis=2)
+    out = np.zeros((h, w, 3))
+    for c in range(3):
+        coef, *_ = np.linalg.lstsq(A, a[ys, xs, c].astype(np.float64), rcond=None)
+        out[:, :, c] = B @ coef
+    return out
 
 
 def pixelize(im, name):
@@ -88,7 +152,25 @@ def pixelize(im, name):
     cw, ch = im.size
     f = min(tw / cw, th / ch)
     nw, nh = max(1, round(cw * f)), max(1, round(ch * f))
-    im = im.resize((nw, nh), Image.BOX)  # area-average: clean pixelization
+
+    # Alpha-weighted (premultiplied) downscale. key_background zeroes alpha but
+    # LEAVES the background RGB in place, so a plain BOX resize area-averages
+    # that pink into every edge pixel and rings the sprite with muddy fringe --
+    # this was the dark halo around the toilet. Premultiplying means fully
+    # transparent pixels contribute nothing, so edges take their colour only
+    # from the object itself.
+    src = np.asarray(im, dtype=np.float64)
+    al = src[:, :, 3:4] / 255.0
+    prem = np.concatenate([src[:, :, :3] * al, src[:, :, 3:4]], axis=2)
+    small = np.asarray(
+        Image.fromarray(prem.astype(np.uint8), 'RGBA').resize((nw, nh), Image.BOX),
+        dtype=np.float64)
+    sa = small[:, :, 3:4] / 255.0
+    rgb_f = np.divide(small[:, :, :3], sa, out=np.zeros_like(small[:, :, :3]), where=sa > 0)
+    im = Image.fromarray(
+        np.concatenate([np.clip(rgb_f, 0, 255), small[:, :, 3:4]], axis=2).astype(np.uint8),
+        'RGBA')
+
     # crisp alpha, then palette quantize the color channels
     alpha = im.getchannel('A').point(lambda a: 255 if a >= 128 else 0)
     rgb = im.convert('RGB').quantize(colors=PALETTE_COLORS, method=Image.MEDIANCUT).convert('RGB')
