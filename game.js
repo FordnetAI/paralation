@@ -23,7 +23,12 @@
     keys[e.code] = true;
   });
   addEventListener('keyup', (e) => { keys[e.code] = false; });
-  cv.addEventListener('pointerdown', () => pressQ.push('Pointer'));
+  let pointerAt = null; // logical coords of the last click, for menu hit tests
+  cv.addEventListener('pointerdown', (e) => {
+    const r = cv.getBoundingClientRect();
+    pointerAt = { x: (e.clientX - r.left) / r.width * VW, y: (e.clientY - r.top) / r.height * VH };
+    pressQ.push('Pointer');
+  });
   const ACT = ['KeyE', 'Space', 'Enter', 'Pointer'];
   function pressed(codes) { return pressQ.some((c) => codes.includes(c)); }
 
@@ -217,6 +222,79 @@
            !solidAt(x - 5, y + 3) && !solidAt(x + 4, y + 3);
   }
 
+  // ---------------- title screen ----------------
+  // Moody and deliberately un-arcadey: near-black field, slow spore drift, dim
+  // violet tendrils growing in from the frame edges (one slowly underlines the
+  // wordmark), serif type, a quiet two-item menu. Nothing blinks. The parasite
+  // reads as something cool and faintly wrong, not a green mascot.
+  // If images/title.png exists it replaces the code-drawn BACKDROP only; the
+  // wordmark and menu always render on top, so an AI art pass drops in the
+  // same way furniture overrides do.
+  let menuSel = 0, menuMode = 'main';
+  const MENU = ['NEW GAME', 'CONTROLS'];
+  const MENU_Y = 180, MENU_STEP = 24;
+  let titleImg = null;
+  { const t = new Image(); t.onload = () => { titleImg = t; }; t.src = 'images/title.png'; }
+  const titleVign = (() => {
+    const c = SPR.cnv(VW, VH), x = c.getContext('2d');
+    x.fillStyle = '#07070c'; x.fillRect(0, 0, VW, VH);
+    const gr = x.createRadialGradient(VW / 2, 96, 10, VW / 2, 96, 300);
+    gr.addColorStop(0, 'rgba(40,38,60,0.5)');
+    gr.addColorStop(0.55, 'rgba(16,15,26,0.18)');
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = gr; x.fillRect(0, 0, VW, VH);
+    return c;
+  })();
+  // tendril skeletons: root, growth step, wiggle phase/amplitude. The y=113
+  // one is the title underline.
+  const TENDRILS = [
+    { x: -8, y: 282, dx: 26, dy: -21, n: 7, ph: 0.0, amp: 9 },
+    { x: 62, y: 288, dx: 10, dy: -26, n: 6, ph: 1.7, amp: 7 },
+    { x: 492, y: 270, dx: -24, dy: -17, n: 7, ph: 3.1, amp: 8 },
+    { x: 488, y: 58, dx: -27, dy: 9, n: 5, ph: 4.4, amp: 6 },
+    { x: -6, y: 34, dx: 25, dy: 7, n: 5, ph: 2.3, amp: 5 },
+    { x: 148, y: 113, dx: 31, dy: 0.5, n: 6, ph: 5.2, amp: 2.2 },
+  ];
+  const thash = (i, k) => { const n = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return n - Math.floor(n); };
+  function drawTendril(t, time) {
+    const len = Math.hypot(t.dx, t.dy), ux = -t.dy / len, uy = t.dx / len;
+    const pts = [];
+    for (let i = 0; i <= t.n; i++) {
+      const sway = Math.sin(time * 0.4 + t.ph + i * 0.9) * t.amp * (i / t.n);
+      pts.push([t.x + t.dx * i + ux * sway, t.y + t.dy * i + uy * sway]);
+    }
+    // tapered, segment by segment: thick at the root, thread-thin at the tip.
+    // Constant-width strokes read as bent wire, not growth.
+    g.lineCap = 'round';
+    for (const [base, col] of [[4.6, 'rgba(44,36,72,0.55)'], [2.4, 'rgba(90,72,140,0.45)']]) {
+      g.strokeStyle = col;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const f = 1 - i / (pts.length - 1);
+        g.lineWidth = Math.max(0.7, base * f);
+        g.beginPath();
+        g.moveTo(pts[i][0], pts[i][1]);
+        g.lineTo(pts[i + 1][0], pts[i + 1][1]);
+        g.stroke();
+      }
+    }
+    // bioluminescent tip, breathing slowly
+    const tip = pts[pts.length - 1];
+    const pulse = 0.5 + 0.5 * Math.sin(time * 1.1 + t.ph);
+    g.fillStyle = 'rgba(122,214,196,' + (0.22 + 0.3 * pulse).toFixed(3) + ')';
+    g.beginPath(); g.arc(tip[0], tip[1], 1.6, 0, Math.PI * 2); g.fill();
+  }
+  function drawSpores(time) {
+    for (let i = 0; i < 30; i++) {
+      const x = ((thash(i, 1) * 500 + time * (2 + thash(i, 2) * 4)) % 500 + 500) % 500 - 10;
+      const y = ((thash(i, 3) * 292 - time * (1.5 + thash(i, 4) * 3)) % 292 + 292) % 292 - 10;
+      const a = 0.05 + 0.15 * (0.5 + 0.5 * Math.sin(time * (0.6 + thash(i, 5)) + i * 2.1));
+      g.fillStyle = thash(i, 6) > 0.82
+        ? 'rgba(120,200,185,' + a.toFixed(3) + ')'
+        : 'rgba(150,140,190,' + a.toFixed(3) + ')';
+      g.fillRect(x, y, thash(i, 7) > 0.7 ? 2 : 1, 1);
+    }
+  }
+
   // ---------------- dialogue ----------------
   function openDialog(lines, onEnd) {
     dialog = { lines: lines, i: 0, chars: 0, onEnd: onEnd };
@@ -240,7 +318,26 @@
     xpPops = xpPops.filter((p) => p.t > 0);
 
     if (state === 'title') {
-      if (pressQ.length) { state = 'fadein'; fadeA = 1; }
+      if (menuMode === 'controls') {
+        if (pressed(['KeyE', 'Space', 'Enter', 'Escape', 'Pointer'])) menuMode = 'main';
+      } else {
+        if (pressed(['KeyW', 'ArrowUp'])) menuSel = (menuSel + MENU.length - 1) % MENU.length;
+        if (pressed(['KeyS', 'ArrowDown'])) menuSel = (menuSel + 1) % MENU.length;
+        let act = pressed(['KeyE', 'Space', 'Enter']);
+        // a click only activates when it lands on a menu row, so stray clicks
+        // on the artwork do not start the game
+        if (pressed(['Pointer']) && pointerAt) {
+          const idx = Math.round((pointerAt.y - MENU_Y) / MENU_STEP);
+          if (idx >= 0 && idx < MENU.length &&
+              Math.abs(MENU_Y + idx * MENU_STEP - pointerAt.y) <= 10) {
+            menuSel = idx; act = true;
+          }
+        }
+        if (act) {
+          if (MENU[menuSel] === 'NEW GAME') { state = 'fadein'; fadeA = 1; }
+          else menuMode = 'controls';
+        }
+      }
 
     } else if (state === 'fadein') {
       fadeA = Math.max(0, fadeA - dt * 1.2);
@@ -442,19 +539,72 @@
   }
 
   function renderTitle() {
-    g.fillStyle = '#0b0a12'; g.fillRect(0, 0, VW, VH);
-    g.drawImage(SPR.para, 0, 0, 16, 16, VW / 2 - 32, 42, 64, 64);
-    g.textAlign = 'center';
-    g.fillStyle = '#8fd06a'; g.font = 'bold 30px monospace';
-    g.fillText('PARALATION', VW / 2, 148);
-    g.fillStyle = '#9a94b8'; g.font = '10px monospace';
-    g.fillText('it grows on you', VW / 2, 168);
-    if (((performance.now() / 500) | 0) % 2) {
-      g.fillStyle = '#f8e7bb'; g.font = '9px monospace';
-      g.fillText('press any key', VW / 2, 218);
+    const time = performance.now() / 1000;
+    const setLS = (v) => { if ('letterSpacing' in g) g.letterSpacing = v; };
+    // backdrop: AI art override if present, else the code-drawn organism
+    if (titleImg) {
+      g.drawImage(titleImg, 0, 0, VW, VH);
+    } else {
+      g.drawImage(titleVign, 0, 0);
+      drawSpores(time);
+      for (const t of TENDRILS) drawTendril(t, time);
     }
-    g.fillStyle = '#3a3650'; g.font = '7px monospace';
-    g.textAlign = 'right'; g.fillText('v0.5', VW - 6, VH - 6);
+    if (menuMode === 'controls') {
+      g.fillStyle = 'rgba(4,3,8,0.9)'; g.fillRect(0, 0, VW, VH);
+      g.textAlign = 'center';
+      setLS('4px');
+      g.font = '13px Georgia, serif'; g.fillStyle = '#a09ab4';
+      g.fillText('CONTROLS', VW / 2, 52);
+      setLS('0px');
+      const rows = [
+        ['MOVE', 'WASD or arrow keys'],
+        ['SPRINT', 'hold Shift'],
+        ['LOOK / TALK', 'E, Space or Enter'],
+        ['CHARACTER', 'C or Tab'],
+        ['DIALOGUE', 'any key advances'],
+      ];
+      let y = 84;
+      g.font = '9px monospace';
+      for (const [k, v] of rows) {
+        g.textAlign = 'right'; g.fillStyle = 'rgba(122,214,196,0.75)';
+        g.fillText(k, VW / 2 - 14, y);
+        g.textAlign = 'left'; g.fillStyle = '#cfc9bb';
+        g.fillText(v, VW / 2 + 2, y);
+        y += 22;
+      }
+      g.textAlign = 'center'; g.fillStyle = '#55506a';
+      g.fillText('E to return', VW / 2, 226);
+    } else {
+      // wordmark: quiet serif, wide tracking, faint teal breath behind it
+      g.textAlign = 'center';
+      setLS('7px');
+      g.font = '28px Georgia, "Times New Roman", serif';
+      g.shadowColor = 'rgba(110,200,185,0.32)'; g.shadowBlur = 14;
+      g.fillStyle = '#d9d3c4'; g.fillText('PARALATION', VW / 2, 100);
+      g.shadowBlur = 0; setLS('0px');
+      g.font = 'italic 10px Georgia, serif'; g.fillStyle = '#6c6684';
+      g.fillText('it grows on you', VW / 2, 130);
+      g.font = '10px monospace'; setLS('3px');
+      MENU.forEach((label, i) => {
+        const y = MENU_Y + i * MENU_STEP;
+        if (i === menuSel) {
+          // slow breath on the selection marks; a pulse, not a blink
+          const p = 0.5 + 0.5 * Math.sin(time * 2.2);
+          g.fillStyle = 'rgba(122,214,196,' + (0.45 + 0.3 * p).toFixed(3) + ')';
+          g.fillRect(VW / 2 - 62, y - 4, 10, 1);
+          g.fillRect(VW / 2 + 52, y - 4, 10, 1);
+          g.fillStyle = '#e4ded0';
+        } else {
+          g.fillStyle = '#4d4864';
+        }
+        g.fillText(label, VW / 2, y);
+      });
+      setLS('0px');
+      g.font = '8px monospace'; g.fillStyle = '#332f47';
+      g.fillText('W S choose · E confirm', VW / 2, 250);
+    }
+    g.fillStyle = '#332f47'; g.font = '7px monospace';
+    g.textAlign = 'right'; g.fillText('v0.6', VW - 6, VH - 6);
     g.textAlign = 'left';
   }
 

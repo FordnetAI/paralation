@@ -9,7 +9,9 @@
 ### Concept brief (from Tim, Aug 15 2026)
 Paralation: a play on parasite and collaboration. Top down gameplay and art in the style of Stardew Valley. Matt Ford, 18, a nerdy kid from San Diego: glasses, bad vision, small and puny, with fairly advanced leukemia. On a school trip to a forest in Arizona he picks up a weird parasite without knowing it. He goes to bed sick and wakes up strong with perfect eyesight, like Tobey Maguire's mirror scene in Spider-Man. The game opens in his bedroom the morning he wakes up changed.
 
-### Current state (v0.5, Aug 15 2026)
+### Current state (v0.6, Aug 16 2026)
+- Title screen v2 (Tim: "not too arcady", "our parasite is cool not nerdy"): near-black field, drifting spores, tapered violet tendrils with teal bioluminescent tips growing in from the edges, one underlining the serif wordmark. Two-item menu (NEW GAME / CONTROLS), W/S + E or mouse click; clicks only land on menu rows so a stray click cannot start the game. Nothing blinks; the selection marks breathe slowly. The green pixel parasite mascot is gone from the title (the sprite def remains in sprites.js for a future in-game co-star).
+- images/title.png, if present, replaces the code-drawn title BACKDROP only; wordmark and menu always render on top. That is the drop-in hook for an AI title art pass (art phase 3), same pattern as furniture overrides.
 - The world is now four maps: upper, lower, outside (the cul-de-sac) and garage.
 - Two-floor family house, whole floor visible on one screen, fade transition on the stairs.
 - Playable: title screen, wake-up intro dialogue, walk and sprint, examine objects, level up, character panel.

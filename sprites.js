@@ -155,7 +155,7 @@ const SPR = (() => {
   };
   matt.left = matt.right.map(flipX);
 
-  // the parasite: title screen mascot (and future co-star)
+  // the parasite (future co-star; no longer the title mascot)
   const para = fromRows([
     '................',
     '......oooo......',
