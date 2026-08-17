@@ -604,7 +604,7 @@
       g.fillText('W S choose · E confirm', VW / 2, 250);
     }
     g.fillStyle = '#332f47'; g.font = '7px monospace';
-    g.textAlign = 'right'; g.fillText('v0.6', VW - 6, VH - 6);
+    g.textAlign = 'right'; g.fillText('v0.7', VW - 6, VH - 6);
     g.textAlign = 'left';
   }
 
