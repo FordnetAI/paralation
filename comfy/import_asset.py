@@ -89,13 +89,11 @@ FRINGE_B_MINUS_G = 8
 MAX_FRINGE_COMP = 800
 # Comic outline: every sprite gets a uniform near-black contour around its
 # silhouette (Tim's call, Aug 16 2026: full asset separation from any ground).
-# 2px at sprite scale = 1 logical pixel on screen, the code art's line weight.
-# The fit leaves this much margin so the contour grows OUTWARD; an inward line
-# would swallow thin chair legs. The contour is dilated with a CROSS kernel
-# (diamond growth, 45-degree chamfered corners) after a notch/nub smoothing
-# pass -- a square kernel on a raw staircase silhouette reads as jagged, which
-# was Tim's actual complaint when the first outlined build looked wrong.
-OUTLINE = 2
+# 0 as of the Ghibli era (Tim's call, Aug 16 2026): the comic outline was a
+# pixel-art-era device for asset separation; painterly sprites carry their own
+# painted edges and the render-side contact shadows do the grounding. The
+# outline machinery below stays intact -- set this back to 2 to bring it back.
+OUTLINE = 0
 OUTLINE_RGBA = (14, 11, 18, 255)
 # Distance from the FITTED local background, not from a corner sample. Chosen by
 # sweeping: a real pocket IS the backdrop so it sits near zero, while the
