@@ -24,11 +24,51 @@
   });
   addEventListener('keyup', (e) => { keys[e.code] = false; });
   let pointerAt = null; // logical coords of the last click, for menu hit tests
-  cv.addEventListener('pointerdown', (e) => {
+
+  // ---------------- touch controls ----------------
+  // Phones get a floating joystick: touch the LEFT side and drag (the outer
+  // ring sprints); taps on the right interact / advance dialogue exactly like
+  // a click; the chip in the top-right opens the character panel. Desktop
+  // mouse behaviour is untouched -- touchUI only wakes on a coarse pointer or
+  // an actual touch.
+  let touchUI = matchMedia('(pointer: coarse)').matches;
+  addEventListener('touchstart', () => { touchUI = true; }, { once: true, passive: true });
+  cv.style.touchAction = 'none';
+  const JOY_R = 30;          // logical px, stick travel radius
+  let joy = null;            // {id, cx, cy, dx, dy} while a left-side touch is down
+  const STATS_CHIP = { x: VW - 30, y: 6, w: 24, h: 20 };
+
+  function logicalXY(e) {
     const r = cv.getBoundingClientRect();
-    pointerAt = { x: (e.clientX - r.left) / r.width * VW, y: (e.clientY - r.top) / r.height * VH };
+    return { x: (e.clientX - r.left) / r.width * VW, y: (e.clientY - r.top) / r.height * VH };
+  }
+  cv.addEventListener('pointerdown', (e) => {
+    const p = logicalXY(e);
+    pointerAt = p;
+    if (touchUI && state === 'play') {
+      if (p.x > STATS_CHIP.x && p.y < STATS_CHIP.y + STATS_CHIP.h) {
+        pressQ.push('KeyC');
+        return;
+      }
+      if (p.x < VW * 0.45 && !joy) {
+        joy = { id: e.pointerId, cx: p.x, cy: p.y, dx: 0, dy: 0 };
+        try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+        return; // a movement touch is not an interact tap
+      }
+    }
     pressQ.push('Pointer');
   });
+  cv.addEventListener('pointermove', (e) => {
+    if (!joy || e.pointerId !== joy.id) return;
+    const p = logicalXY(e);
+    let dx = p.x - joy.cx, dy = p.y - joy.cy;
+    const m = Math.hypot(dx, dy);
+    if (m > JOY_R) { dx = dx / m * JOY_R; dy = dy / m * JOY_R; }
+    joy.dx = dx; joy.dy = dy;
+  });
+  const endJoy = (e) => { if (joy && e.pointerId === joy.id) joy = null; };
+  cv.addEventListener('pointerup', endJoy);
+  cv.addEventListener('pointercancel', endJoy);
   const ACT = ['KeyE', 'Space', 'Enter', 'Pointer'];
   function pressed(codes) { return pressQ.some((c) => codes.includes(c)); }
 
@@ -375,11 +415,20 @@
       if (pressed(['KeyC', 'Tab'])) { state = 'stats'; return; }
       let dx = 0, dy = 0;
       for (const k in MOVE) if (keys[k]) { dx += MOVE[k][0]; dy += MOVE[k][1]; }
+      let joySprint = false;
+      if (joy) {
+        const m = Math.hypot(joy.dx, joy.dy);
+        if (m > JOY_R * 0.25) {
+          if (Math.abs(joy.dx) > m * 0.4) dx += Math.sign(joy.dx);
+          if (Math.abs(joy.dy) > m * 0.4) dy += Math.sign(joy.dy);
+          joySprint = m > JOY_R * 0.85; // push to the outer ring to run
+        }
+      }
       dx = Math.sign(dx); dy = Math.sign(dy);
       player.moving = !!(dx || dy);
       if (STATS.s.sta <= 0.5) exhausted = true;
       else if (STATS.s.sta >= STATS.s.staMax * 0.25) exhausted = false;
-      sprinting = !!(player.moving && (keys.ShiftLeft || keys.ShiftRight) && !exhausted);
+      sprinting = !!(player.moving && (keys.ShiftLeft || keys.ShiftRight || joySprint) && !exhausted);
       if (player.moving) {
         if (dy < 0) player.dir = 'up'; else if (dy > 0) player.dir = 'down';
         if (dx < 0) player.dir = 'left'; else if (dx > 0) player.dir = 'right';
@@ -686,6 +735,24 @@
     }
     g.textAlign = 'left';
     g.translate(camX, camY); // back to screen space: HUD, dialog and fade do not scroll
+    if (touchUI && state === 'play') {
+      // stats chip, always visible on touch devices
+      g.fillStyle = 'rgba(18,14,26,0.55)';
+      g.fillRect(STATS_CHIP.x, STATS_CHIP.y, STATS_CHIP.w, STATS_CHIP.h);
+      g.fillStyle = '#cfc9bb'; g.font = 'bold 10px monospace'; g.textAlign = 'center';
+      g.fillText('C', STATS_CHIP.x + STATS_CHIP.w / 2, STATS_CHIP.y + 14);
+      g.textAlign = 'left';
+      if (joy) {
+        // floating joystick: base ring where the touch began, stick under it
+        g.globalAlpha = 0.35;
+        g.strokeStyle = '#f0ead8'; g.lineWidth = 2;
+        g.beginPath(); g.arc(joy.cx, joy.cy, JOY_R, 0, Math.PI * 2); g.stroke();
+        g.globalAlpha = 0.55;
+        g.fillStyle = '#f0ead8';
+        g.beginPath(); g.arc(joy.cx + joy.dx, joy.cy + joy.dy, 11, 0, Math.PI * 2); g.fill();
+        g.globalAlpha = 1;
+      }
+    }
     if (state === 'play' && (sprinting || STATS.s.sta < STATS.s.staMax)) renderStamina();
     if (state === 'stats') renderStatsPanel();
     if (dialog) renderDialog();
