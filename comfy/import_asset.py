@@ -51,7 +51,22 @@ SIZES = {
     'schoolMain': (384, 208), 'schoolGym': (256, 160), 'schoolGate': (96, 64),
     'flagpole': (16, 80), 'busCoach': (96, 52), 'bikeShed': (96, 56),
     'standSmall': (128, 72),
+    'portraitMatt': (48, 48),
 }
+
+# Seamless ground/wall textures (art phase 2). NOT keyed -- a texture IS
+# background. Square-cropped, downscaled to 256px (= 8x8 game tiles at hi-res),
+# and edge-blended so the engine can wrap it without a visible seam.
+TEXTURES = {
+    'tex-grass', 'tex-road', 'tex-paving', 'tex-wood', 'tex-bath', 'tex-kitchen',
+    'tex-wallBlue', 'tex-wallAqua', 'tex-wallRose', 'tex-wallCream',
+    'tex-wallWood', 'tex-wallGrey',
+}
+TEX_SIZE = 256
+TEX_BLEND = 20  # px of edge crossfade toward the opposite edge
+
+# Full-frame art, shown whole: cover-cropped to an exact size, never keyed.
+FULLFRAME = {'title': (960, 544)}
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
 # Two-stage keying thresholds (sum-abs RGB distance):
@@ -284,12 +299,43 @@ def pixelize(im, name, outline=OUTLINE):
     return out
 
 
+def import_texture(path, name):
+    im = Image.open(path).convert('RGB')
+    s = min(im.size)
+    left, top = (im.width - s) // 2, (im.height - s) // 2
+    im = im.crop((left, top, left + s, top + s)).resize((TEX_SIZE, TEX_SIZE), Image.LANCZOS)
+    # crossfade each edge toward its opposite edge so tiling wraps cleanly
+    a = np.asarray(im, dtype=np.float64)
+    M = TEX_BLEND
+    for i in range(M):
+        w = 0.5 * (1 - i / M)
+        a[i], a[-1 - i] = (a[i] * (1 - w) + a[-1 - i] * w,
+                           a[-1 - i] * (1 - w) + a[i] * w)
+        a[:, i], a[:, -1 - i] = (a[:, i] * (1 - w) + a[:, -1 - i] * w,
+                                 a[:, -1 - i] * (1 - w) + a[:, i] * w)
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), 'RGB')
+
+
+def import_fullframe(path, size):
+    im = Image.open(path).convert('RGB')
+    tw, th = size
+    f = max(tw / im.width, th / im.height)
+    im = im.resize((round(im.width * f), round(im.height * f)), Image.LANCZOS)
+    left, top = (im.width - tw) // 2, (im.height - th) // 2
+    return im.crop((left, top, left + tw, top + th))
+
+
 def import_one(path, name):
-    if name not in SIZES:
+    if name in TEXTURES:
+        out = import_texture(path, name)
+    elif name in FULLFRAME:
+        out = import_fullframe(path, FULLFRAME[name])
+    elif name in SIZES:
+        im = key_background(Image.open(path), aggressive=name in AGGRESSIVE_KEY)
+        out = pixelize(im, name)
+    else:
         print('  SKIP %s: unknown asset name %r' % (os.path.basename(path), name))
         return False
-    im = key_background(Image.open(path), aggressive=name in AGGRESSIVE_KEY)
-    out = pixelize(im, name)
     os.makedirs(OUT_DIR, exist_ok=True)
     dest = os.path.join(OUT_DIR, name + '.png')
     out.save(dest)

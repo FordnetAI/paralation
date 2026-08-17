@@ -48,6 +48,16 @@ XWIDE = (1344, 768)  # the school main building; very wide frontage
 
 
 def full_prompt(item_text, view='front'):
+    if view == 'tex':
+        # full-frame seamless texture: NO magenta, NO single-object framing
+        return ('Ghibli style seamless tileable texture, %s, hand painted, soft '
+                'painterly, perfectly flat overhead view, even diffuse lighting, '
+                'no objects, no shadows, repeating pattern, fills the entire frame'
+                % item_text)
+    if view == 'full':
+        # full-frame illustration (title art): keyed by nothing, shown whole
+        return ('Ghibli style, %s, hand drawn animation, painterly, cinematic '
+                'lighting, fills the entire frame' % item_text)
     kind = 'building' if view == 'ext' else 'prop'
     return ('Ghibli style, %s, hand drawn animation %s, %s, '
             'single object centered on plain magenta background, no drop shadow, '
@@ -184,6 +194,60 @@ WORKFLOWS = {
         ('standSmall', 'small metal spectator stand with three bench rows and a canopy',
          'front', WIDE),
     ],
+    # ============================================================
+    # Art phase 2+3 (Aug 16 2026): replace EVERYTHING code-drawn.
+    # 9  = ground and wall textures (seamless, sampled by the engine)
+    # 10 = stairs, railing, Matt's dialogue portrait, the title painting
+    # 11 = Matt walk-cycle candidate sheets + parasite concept art. These save
+    #      OUTSIDE the auto-import folder on purpose: frames get hand-sliced,
+    #      concepts are reference. Do not point the importer at them.
+    # ============================================================
+    'paralation-9-ground': [
+        ('tex-grass', 'lush green meadow grass lawn from directly above', 'tex'),
+        ('tex-road', 'smooth warm grey asphalt road surface', 'tex'),
+        ('tex-paving', 'warm beige stone paving slabs', 'tex'),
+        ('tex-wood', 'warm honey brown wooden floorboards, horizontal planks', 'tex'),
+        ('tex-bath', 'pale blue ceramic bathroom floor tiles, small squares', 'tex'),
+        ('tex-kitchen', 'cream stone kitchen floor tiles', 'tex'),
+        ('tex-wallBlue', 'soft blue striped wallpaper, gentle vertical stripes', 'tex'),
+        ('tex-wallAqua', 'soft aqua green wallpaper with subtle pattern', 'tex'),
+        ('tex-wallRose', 'warm dusty rose wallpaper with subtle pattern', 'tex'),
+        ('tex-wallCream', 'warm cream wallpaper with faint vertical texture', 'tex'),
+        ('tex-wallWood', 'dark warm wood panelled wall, vertical boards', 'tex'),
+        ('tex-wallGrey', 'plain warm grey painted plaster wall', 'tex'),
+    ],
+    'paralation-10-stairs-ui': [
+        ('stairsD', 'interior wooden staircase seen from above going down, straight '
+                    'flight of steps', 'top', TALL),
+        ('stairsU', 'interior wooden staircase seen from above going up, straight '
+                    'flight of steps', 'top', TALL),
+        ('railing', 'wooden stair railing banister, vertical section', 'front', TALL),
+        ('portraitMatt', 'portrait bust of an 18 year old lanky teenage boy, short '
+                         'brown hair, blue t-shirt, warm gentle smile, head and '
+                         'shoulders', 'front'),
+        ('title', 'a quiet suburban house at dusk seen from the street, one bedroom '
+                  'window glowing warm, thin dark violet tendrils creeping across the '
+                  'foreground with faint teal bioluminescent tips, ominous and '
+                  'beautiful, muted colors, deep shadows', 'full', XWIDE),
+    ],
+    'paralation-11-matt': [
+        ('mattSheetDown', 'game character sprite sheet, 18 year old lanky teenage boy '
+                          'with short brown hair and blue t-shirt, walking toward the '
+                          'viewer, 3 walk cycle poses side by side, same character '
+                          'repeated, white background, full body', 'front', WIDE),
+        ('mattSheetUp', 'game character sprite sheet, 18 year old lanky teenage boy '
+                        'with short brown hair and blue t-shirt, walking away from the '
+                        'viewer, seen from behind, 3 walk cycle poses side by side, '
+                        'white background, full body', 'front', WIDE),
+        ('mattSheetSide', 'game character sprite sheet, 18 year old lanky teenage boy '
+                          'with short brown hair and blue t-shirt, walking to the '
+                          'right in profile, 3 walk cycle poses side by side, white '
+                          'background, full body', 'front', WIDE),
+        ('parasiteConcept', 'creature concept art, sleek symbiotic parasite organism, '
+                            'dark violet with faint teal bioluminescent markings, '
+                            'elegant tendrils, cool and faintly menacing, not cute, '
+                            'several views on one sheet', 'front', WIDE),
+    ],
     'paralation-5-yard': [
         ('tree', 'large leafy oak tree with a thick brown trunk and full green canopy',
          'front', TALL),
@@ -205,6 +269,14 @@ def unpack(item):
     """(name, text, view) or (name, text, view, latent size)."""
     name, text, view = item[0], item[1], item[2]
     return name, text, view, (item[3] if len(item) > 3 else SQUARE)
+
+
+def save_prefix(name):
+    """Walk-cycle sheets and concept art are hand-processed reference, never
+    auto-imported, so they save outside the importer's folder."""
+    if name.startswith('mattSheet') or name.endswith('Concept'):
+        return 'paralation-matt/' + name
+    return 'paralation/' + name
 
 
 def build_ui(items):
@@ -263,7 +335,7 @@ def build_ui(items):
         d = node(nid + 3, 'VAEDecode', [1510, y], [210, 46], [],
                  n_in=[('samples', 'LATENT'), ('vae', 'VAE')],
                  n_out=[('IMAGE', 'IMAGE')])
-        s = node(nid + 4, 'SaveImage', [1760, y], [320, 200], ['paralation/' + name],
+        s = node(nid + 4, 'SaveImage', [1760, y], [320, 200], [save_prefix(name)],
                  n_in=[('images', 'IMAGE')])
         connect(lora, 1, p, 0, 'CLIP')
         connect(p, 0, fg, 0, 'CONDITIONING')
@@ -307,7 +379,7 @@ def build_api(items):
             'latent_image': [lats[sz], 0], 'seed': 987650 + i, 'steps': STEPS, 'cfg': 1,
             'sampler_name': 'euler', 'scheduler': 'simple', 'denoise': 1}}
         p[did] = {'class_type': 'VAEDecode', 'inputs': {'samples': [kid, 0], 'vae': ['1', 2]}}
-        p[sid] = {'class_type': 'SaveImage', 'inputs': {'images': [did, 0], 'filename_prefix': 'paralation/' + name}}
+        p[sid] = {'class_type': 'SaveImage', 'inputs': {'images': [did, 0], 'filename_prefix': save_prefix(name)}}
         nid += 5
     return {'prompt': p}
 

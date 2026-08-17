@@ -162,13 +162,21 @@
   // any code-drawn sprite. Missing files fall back silently; when the last
   // image settles, rebuild backgrounds so flats/wall art pick up overrides.
   let imgPending = 0, imgLoaded = 0;
+  const done = () => { if (--imgPending === 0 && imgLoaded > 0) buildAll(); };
   for (const name in SPR.OBJ) {
     const img = new Image();
     imgPending++;
-    const done = () => { if (--imgPending === 0 && imgLoaded > 0) buildAll(); };
     img.onload = () => { SPR.OBJ[name].hi = img; imgLoaded++; done(); };
     img.onerror = done;
     img.src = 'images/' + name + '.png';
+  }
+  // ground/wall textures ride the same rebuild cycle as sprite overrides
+  for (const texName of [...new Set(Object.values(SPR.TEX))]) {
+    const img = new Image();
+    imgPending++;
+    img.onload = () => { SPR.TEXIMG[texName] = img; imgLoaded++; done(); };
+    img.onerror = done;
+    img.src = 'images/' + texName + '.png';
   }
 
   // ---------------- collision ----------------
@@ -235,6 +243,9 @@
   const MENU_Y = 180, MENU_STEP = 24;
   let titleImg = null;
   { const t = new Image(); t.onload = () => { titleImg = t; }; t.src = 'images/title.png'; }
+  // painted Matt bust for dialogue and the stats panel; pixel face until then
+  let portraitImg = null;
+  { const p = new Image(); p.onload = () => { portraitImg = p; }; p.src = 'images/portraitMatt.png'; }
   const titleVign = (() => {
     const c = SPR.cnv(VW, VH), x = c.getContext('2d');
     x.fillStyle = '#07070c'; x.fillRect(0, 0, VW, VH);
@@ -462,7 +473,8 @@
     g.fillStyle = '#8a5b2b';
     g.fillRect(bx + 6, by + 8, 48, 1); g.fillRect(bx + 6, by + 55, 48, 1);
     g.fillRect(bx + 6, by + 8, 1, 48); g.fillRect(bx + 53, by + 8, 1, 48);
-    g.drawImage(SPR.matt.down[0], 0, 0, 16, 12, bx + 6, by + 11, 48, 36);
+    if (portraitImg) g.drawImage(portraitImg, bx + 6, by + 8, 48, 48);
+    else g.drawImage(SPR.matt.down[0], 0, 0, 16, 12, bx + 6, by + 11, 48, 36);
     g.fillStyle = '#6b3f16'; g.font = 'bold 7px monospace'; g.textAlign = 'center';
     g.fillText('MATT', bx + 30, by + 53);
     g.textAlign = 'left';
@@ -498,7 +510,8 @@
     g.fillRect(px, py, pw, 2); g.fillRect(px, py + ph - 2, pw, 2);
     g.fillRect(px, py, 2, ph); g.fillRect(px + pw - 2, py, 2, ph);
     g.fillStyle = '#e7d0a0'; g.fillRect(px + 2, py + 2, pw - 4, 2);
-    g.drawImage(SPR.matt.down[0], 0, 0, 16, 12, px + 12, py + 12, 36, 27);
+    if (portraitImg) g.drawImage(portraitImg, px + 12, py + 10, 36, 36);
+    else g.drawImage(SPR.matt.down[0], 0, 0, 16, 12, px + 12, py + 12, 36, 27);
     g.fillStyle = '#40260f'; g.font = 'bold 10px monospace';
     g.fillText('MATT FORD', px + 58, py + 22);
     g.font = '8px monospace'; g.fillStyle = '#6b3f16';

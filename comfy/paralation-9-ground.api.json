@@ -1,0 +1,874 @@
+{
+ "prompt": {
+  "1": {
+   "class_type": "CheckpointLoaderSimple",
+   "inputs": {
+    "ckpt_name": "flux1-dev-fp8.safetensors"
+   }
+  },
+  "2": {
+   "class_type": "LoraLoader",
+   "inputs": {
+    "model": [
+     "1",
+     0
+    ],
+    "clip": [
+     "1",
+     1
+    ],
+    "lora_name": "Ghibli_style_flux.safetensors",
+    "strength_model": 0.95,
+    "strength_clip": 0.95
+   }
+  },
+  "5": {
+   "class_type": "EmptySD3LatentImage",
+   "inputs": {
+    "width": 1024,
+    "height": 1024,
+    "batch_size": 1
+   }
+  },
+  "30": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, lush green meadow grass lawn from directly above, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "31": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "30",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "32": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "31",
+     0
+    ],
+    "negative": [
+     "31",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987650,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "33": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "32",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "34": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "33",
+     0
+    ],
+    "filename_prefix": "paralation/tex-grass"
+   }
+  },
+  "35": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, smooth warm grey asphalt road surface, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "36": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "35",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "37": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "36",
+     0
+    ],
+    "negative": [
+     "36",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987651,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "38": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "37",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "39": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "38",
+     0
+    ],
+    "filename_prefix": "paralation/tex-road"
+   }
+  },
+  "40": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, warm beige stone paving slabs, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "41": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "40",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "42": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "41",
+     0
+    ],
+    "negative": [
+     "41",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987652,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "43": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "42",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "44": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "43",
+     0
+    ],
+    "filename_prefix": "paralation/tex-paving"
+   }
+  },
+  "45": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, warm honey brown wooden floorboards, horizontal planks, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "46": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "45",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "47": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "46",
+     0
+    ],
+    "negative": [
+     "46",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987653,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "48": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "47",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "49": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "48",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wood"
+   }
+  },
+  "50": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, pale blue ceramic bathroom floor tiles, small squares, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "51": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "50",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "52": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "51",
+     0
+    ],
+    "negative": [
+     "51",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987654,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "53": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "52",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "54": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "53",
+     0
+    ],
+    "filename_prefix": "paralation/tex-bath"
+   }
+  },
+  "55": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, cream stone kitchen floor tiles, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "56": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "55",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "57": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "56",
+     0
+    ],
+    "negative": [
+     "56",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987655,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "58": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "57",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "59": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "58",
+     0
+    ],
+    "filename_prefix": "paralation/tex-kitchen"
+   }
+  },
+  "60": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, soft blue striped wallpaper, gentle vertical stripes, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "61": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "60",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "62": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "61",
+     0
+    ],
+    "negative": [
+     "61",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987656,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "63": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "62",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "64": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "63",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallBlue"
+   }
+  },
+  "65": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, soft aqua green wallpaper with subtle pattern, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "66": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "65",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "67": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "66",
+     0
+    ],
+    "negative": [
+     "66",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987657,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "68": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "67",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "69": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "68",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallAqua"
+   }
+  },
+  "70": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, warm dusty rose wallpaper with subtle pattern, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "71": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "70",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "72": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "71",
+     0
+    ],
+    "negative": [
+     "71",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987658,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "73": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "72",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "74": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "73",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallRose"
+   }
+  },
+  "75": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, warm cream wallpaper with faint vertical texture, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "76": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "75",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "77": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "76",
+     0
+    ],
+    "negative": [
+     "76",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987659,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "78": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "77",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "79": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "78",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallCream"
+   }
+  },
+  "80": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, dark warm wood panelled wall, vertical boards, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "81": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "80",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "82": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "81",
+     0
+    ],
+    "negative": [
+     "81",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987660,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "83": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "82",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "84": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "83",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallWood"
+   }
+  },
+  "85": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "2",
+     1
+    ],
+    "text": "Ghibli style seamless tileable texture, plain warm grey painted plaster wall, hand painted, soft painterly, perfectly flat overhead view, even diffuse lighting, no objects, no shadows, repeating pattern, fills the entire frame"
+   }
+  },
+  "86": {
+   "class_type": "FluxGuidance",
+   "inputs": {
+    "conditioning": [
+     "85",
+     0
+    ],
+    "guidance": 3.5
+   }
+  },
+  "87": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "2",
+     0
+    ],
+    "positive": [
+     "86",
+     0
+    ],
+    "negative": [
+     "86",
+     0
+    ],
+    "latent_image": [
+     "5",
+     0
+    ],
+    "seed": 987661,
+    "steps": 24,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  "88": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "87",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "89": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "88",
+     0
+    ],
+    "filename_prefix": "paralation/tex-wallGrey"
+   }
+  }
+ }
+}

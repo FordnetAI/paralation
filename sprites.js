@@ -198,7 +198,29 @@ const SPR = (() => {
     }
   }
 
+  // Art phase 2: ground and walls can be backed by AI textures. TEX maps a
+  // grid char to its images/tex-*.png; TEXIMG is filled by the game's loader.
+  // A loaded texture is sampled at WORLD coordinates (32px per tile in the
+  // 256px texture, wrapping), so the pattern flows across tiles; a missing
+  // texture falls back to the code paint below, per char, forever.
+  const TEX = {
+    w: 'tex-wood', b: 'tex-bath', k: 'tex-kitchen', G: 'tex-grass',
+    R: 'tex-road', S: 'tex-paving', V: 'tex-paving', c: 'tex-paving',
+    A: 'tex-wallBlue', B: 'tex-wallAqua', C: 'tex-wallRose', E: 'tex-wallCream',
+    D: 'tex-wallWood', F: 'tex-wallGrey',
+  };
+  const TEXIMG = {};
+  function texSlice(g, px, py, ch, tx, ty) {
+    const ti = TEX[ch] && TEXIMG[TEX[ch]];
+    if (!ti) return false;
+    const sx = ((tx * 32) % ti.width + ti.width) % ti.width;
+    const sy = ((ty * 32) % ti.height + ti.height) % ti.height;
+    g.drawImage(ti, sx, sy, 32, 32, px, py, T, T);
+    return true;
+  }
+
   function floor(g, px, py, ch, tx, ty) {
+    if (texSlice(g, px, py, ch, tx, ty)) return;
     if (ch === 'w') { // wood, soft warm planks
       softFill(g, px, py, tx, ty, '#a8815a', '#bd9268', 1, 5);
       for (let i = 0; i < 2; i++) R(g, px, py + i * 8 + 3, T, 1, 'rgba(96,66,38,0.18)');
@@ -260,6 +282,15 @@ const SPR = (() => {
   };
   function wall(g, px, py, type, belowFloor, aboveVoid) {
     const wp = WALLPAPER[type];
+    if (texSlice(g, px, py, type, Math.floor(px / T), Math.floor(py / T))) {
+      // texture carries the surface; the structural overlays still apply
+      if (belowFloor) {
+        R(g, px, py + 12, T, 1, 'rgba(150,116,80,0.8)');
+        R(g, px, py + 13, T, 3, '#6b4b30');
+      }
+      if (aboveVoid) R(g, px, py, T, 2, 'rgba(20,14,10,0.85)');
+      return;
+    }
     if (wp.wood) {
       softFill(g, px, py, Math.floor(px / T), Math.floor(py / T), wp.dark, wp.base, 31, 4);
       R(g, px, py, 1, T, 'rgba(60,44,20,0.5)'); R(g, px + 15, py, 1, T, 'rgba(60,44,20,0.5)');
@@ -805,5 +836,6 @@ const SPR = (() => {
     return c;
   })();
 
-  return { cnv: cnv, matt: matt, para: para, OBJ: OBJ, wall: wall, floor: floor, shadow: shadow };
+  return { cnv: cnv, matt: matt, para: para, OBJ: OBJ, wall: wall, floor: floor,
+           shadow: shadow, TEX: TEX, TEXIMG: TEXIMG };
 })();
