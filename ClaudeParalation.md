@@ -30,7 +30,13 @@ Paralation: a play on parasite and collaboration. Top down gameplay and art in t
 - paralation-11-matt: walk-cycle candidate sheets (down/up/side) + parasite concept art. These save to output/paralation-matt/, DELIBERATELY outside the auto-import folder: frames need hand-slicing into SPR.matt's format (a follow-up engine task), concepts are reference. The side sheet covers left+right since the engine flips.
 - After Tim runs 9 and 10: batch import picks up tex-* and title automatically (import_one now routes by name: TEXTURES / FULLFRAME / SIZES).
 
-### Current state (v0.6, Aug 16 2026)
+### Current state (v0.7, end of Aug 16 2026 session)
+- LIVE at paralation.web.app: full Ghibli conversion. 76+ painterly sprites, 11 ground/wall textures (wood floor deliberately stays code-painted; all four AI wood rolls were loud orange), painted dialogue portrait, dusk title painting, mobile touch controls (floating joystick left side, outer ring sprints, tap interacts, chip opens stats).
+- Village + school sprite sets imported and waiting for THEIR MAPS - that is the next big build.
+- Matt walk sheets + parasite concepts may exist in output/paralation-matt/ (workflow 11, hand-slicing is its own task).
+- Session ended with a requested machine shutdown after deploy.
+
+### Previous state (v0.6, Aug 16 2026)
 - Title screen v2 (Tim: "not too arcady", "our parasite is cool not nerdy"): near-black field, drifting spores, tapered violet tendrils with teal bioluminescent tips growing in from the edges, one underlining the serif wordmark. Two-item menu (NEW GAME / CONTROLS), W/S + E or mouse click; clicks only land on menu rows so a stray click cannot start the game. Nothing blinks; the selection marks breathe slowly. The green pixel parasite mascot is gone from the title (the sprite def remains in sprites.js for a future in-game co-star).
 - images/title.png, if present, replaces the code-drawn title BACKDROP only; wordmark and menu always render on top. That is the drop-in hook for an AI title art pass (art phase 3), same pattern as furniture overrides.
 - The world is now four maps: upper, lower, outside (the cul-de-sac) and garage.
