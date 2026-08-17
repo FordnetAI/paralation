@@ -213,9 +213,24 @@ const SPR = (() => {
   function texSlice(g, px, py, ch, tx, ty) {
     const ti = TEX[ch] && TEXIMG[TEX[ch]];
     if (!ti) return false;
-    const sx = ((tx * 32) % ti.width + ti.width) % ti.width;
-    const sy = ((ty * 32) % ti.height + ti.height) % ti.height;
-    g.drawImage(ti, sx, sy, 32, 32, px, py, T, T);
+    let sx = ((tx * 32) % ti.width + ti.width) % ti.width;
+    let sy = ((ty * 32) % ti.height + ti.height) % ti.height;
+    // every 8x8-tile block mirrors deterministically, which doubles the
+    // apparent variety of a 256px texture; the importer's edge blend makes
+    // opposite edges near-identical, so mirrored blocks still join cleanly
+    const bx = Math.floor(tx / 8), by = Math.floor(ty / 8);
+    const flipH = rnd(bx, by, 51) > 0.5, flipV = rnd(bx, by, 52) > 0.5;
+    if (!flipH && !flipV) {
+      g.drawImage(ti, sx, sy, 32, 32, px, py, T, T);
+      return true;
+    }
+    if (flipH) sx = ti.width - 32 - sx;
+    if (flipV) sy = ti.height - 32 - sy;
+    g.save();
+    g.translate(px + (flipH ? T : 0), py + (flipV ? T : 0));
+    g.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+    g.drawImage(ti, sx, sy, 32, 32, 0, 0, T, T);
+    g.restore();
     return true;
   }
 
